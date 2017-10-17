@@ -39,41 +39,6 @@ export default class App extends Component<{}> {
   }
 }
 
-/*componentDidMount() {
-    return fetch('https://facebook.github.io/react-native/movies.json')
-      .then((response) => response.json())
-      .then((responseJson) => {
-        let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        this.setState({
-          isLoading: false,
-          dataSource: ds.cloneWithRows(responseJson.movies),
-        }, function() {
-          // do something with new state
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-
-  render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={{flex: 1, paddingTop: 20}}>
-          <ActivityIndicator />
-        </View>
-      );
-    }
-
-    return (
-      <View style={{flex: 1, paddingTop: 20}}>
-        <ListView
-          dataSource={this.state.dataSource}
-          renderRow={(rowData) => <Text>{rowData.title}, {rowData.releaseYear}</Text>}
-        />
-      </View>
-    );
-  }*/
  componentDidMount() {
    console.log('comentario');
    return fetch('http://192.168.1.40:8000/v2/Sucursales/')
@@ -92,6 +57,22 @@ export default class App extends Component<{}> {
      });
  }
 
+ _Post(){
+   fetch('http://192.168.1.40:8000/v2/update-perfil/',{
+     method: 'POST',
+     headers: {
+       'Accept': 'application/json',
+       'content-Type': 'application/json',
+     },
+     body: JSON.stringify({
+       token: 'adb47dd08a4a5b215f87225e878b6044464d908d',
+       avatar : newBlob,
+       password: 'password',
+       nickname: 'nickname',
+       descripcion : 'descripcion'
+     })
+   })
+ }
   render() {
     if(this.state.isLoading){
       return (
@@ -108,10 +89,14 @@ export default class App extends Component<{}> {
                   <Text>{rowData.titulo}</Text>
                     <Text>{rowData.subtitulo}</Text>
                     <Text>{rowData.estado}</Text>
-                    <Text> {rowData.longitud}</Text> 
+                    <Text> {rowData.longitud}</Text>
                     <Text>{rowData.latitud}</Text>
                   </View>}
                 />
+
+          <Button style={styles.button}
+                  title='CLICKME'
+                  onPress={this._Post}/>
       </View>
     );
   }
