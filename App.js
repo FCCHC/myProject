@@ -27,6 +27,10 @@ import {
 
 } from 'react-native';
 
+var Platform = require('react-native').Platform;
+var ImagePicker = require('react-native-image-picker');
+
+
 
 
 export default class App extends Component<{}> {
@@ -37,6 +41,7 @@ export default class App extends Component<{}> {
        isLoading: true
 
   }
+  this._Post = this._Post.bind(this);
 }
 
  componentDidMount() {
@@ -57,22 +62,38 @@ export default class App extends Component<{}> {
      });
  }
 
+
  _Post(){
-   fetch('http://192.168.1.40:8000/v2/update-perfil/',{
-     method: 'POST',
-     headers: {
-       'Accept': 'application/json',
-       'content-Type': 'application/json',
-     },
-     body: JSON.stringify({
-       token: 'adb47dd08a4a5b215f87225e878b6044464d908d',
-       avatar : newBlob,
-       password: 'password',
-       nickname: 'nickname',
-       descripcion : 'descripcion'
+   console.log('CLICK');
+
+   var image = new FormData();
+       image.append('picture', {uri: , name:'avatar.jpg', type: 'image/jpg'});
+    const data ={
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type':'application/json',
+        'Authorization': '85f174a8a4039b4835da182c8fcfdfd35f2d0e55'
+      },
+      body: JSON.stringify({
+        avatar: image,
+        password : '54321',
+        nickname :'aortega',
+        descripcion : 'descripcion ',
+      })
+    }
+    console.log(JSON);
+   fetch("http://192.168.1.40:8000/v2/update-perfil/", data)
+     .then((responseJson) => {
+       console.log(responseJson);
      })
-   })
+     .catch(err =>{
+       console.error(err);
+     })
+     console.log(data);
+
  }
+
   render() {
     if(this.state.isLoading){
       return (
@@ -97,6 +118,8 @@ export default class App extends Component<{}> {
           <Button style={styles.button}
                   title='CLICKME'
                   onPress={this._Post}/>
+
+          <TouchableOpacity style={styles.button} onPress={this.chooseImage}><Text>CHOOSEIMAGES</Text></TouchableOpacity>        
       </View>
     );
   }
