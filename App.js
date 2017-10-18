@@ -23,25 +23,24 @@ import {
   YearPicker,
   CheckBox,
   StatusBar,
-  Navigator
+  Navigator,
+  TouchableOpacity,
 
 } from 'react-native';
 
-var Platform = require('react-native').Platform;
 var ImagePicker = require('react-native-image-picker');
-
-
-
 
 export default class App extends Component<{}> {
   constructor(props){
     super(props);
      this.state = {
 
-       isLoading: true
+       isLoading: true,
+       image: '',
 
   }
   this._Post = this._Post.bind(this);
+  this.chooseImage = this.chooseImage.bind(this);
 }
 
  componentDidMount() {
@@ -66,8 +65,8 @@ export default class App extends Component<{}> {
  _Post(){
    console.log('CLICK');
 
-   var image = new FormData();
-       image.append('picture', {uri: , name:'avatar.jpg', type: 'image/jpg'});
+   /*var image = new FormData();
+       image.append('picture', {uri: , name:'avatar.jpg', type: 'image/jpg'});*/
     const data ={
       method: 'POST',
       headers: {
@@ -76,7 +75,7 @@ export default class App extends Component<{}> {
         'Authorization': '85f174a8a4039b4835da182c8fcfdfd35f2d0e55'
       },
       body: JSON.stringify({
-        avatar: image,
+        avatar: '',
         password : '54321',
         nickname :'aortega',
         descripcion : 'descripcion ',
@@ -92,6 +91,31 @@ export default class App extends Component<{}> {
      })
      console.log(data);
 
+ }
+
+
+ chooseImage(){
+   ImagePicker.showImagePicker((response)=> {
+     console.log('Response = ', response);
+
+     if(response.didCancel){
+       console.log('User cancelled image picker');
+     }else if(response.error){
+       console.log('ImagePicker error: ', response.error);
+     }
+      else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else{
+
+        let source ={uri: response.uri.replace('file://', ''), isStatic: ture};
+
+        if(Platform.OS === 'android'){
+           source = {uri: response.uri, isStatic: true};
+        }
+
+        this.setState({image: source});
+      }
+   });
  }
 
   render() {
@@ -114,12 +138,12 @@ export default class App extends Component<{}> {
                     <Text>{rowData.latitud}</Text>
                   </View>}
                 />
-
+         {this.state.image ? <Image style={{flex:1}} source={this.state.image}></Image>:null}
           <Button style={styles.button}
-                  title='CLICKME'
+                  title='POST'
                   onPress={this._Post}/>
 
-          <TouchableOpacity style={styles.button} onPress={this.chooseImage}><Text>CHOOSEIMAGES</Text></TouchableOpacity>        
+          <Button style={styles.button} onPress={this.chooseImage} title='PHOTO'/>
       </View>
     );
   }
