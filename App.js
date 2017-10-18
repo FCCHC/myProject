@@ -65,8 +65,8 @@ export default class App extends Component<{}> {
  _Post(){
    console.log('CLICK');
 
-   /*var image = new FormData();
-       image.append('picture', {uri: , name:'avatar.jpg', type: 'image/jpg'});*/
+      /*data = new FormData();
+       data.append('picture', {uri:'' , name:'avatar.jpg', type: 'image/jpg'});*/
     const data ={
       method: 'POST',
       headers: {
@@ -75,11 +75,12 @@ export default class App extends Component<{}> {
         'Authorization': '85f174a8a4039b4835da182c8fcfdfd35f2d0e55'
       },
       body: JSON.stringify({
-        avatar: '',
+        avatar : '',
         password : '54321',
         nickname :'aortega',
         descripcion : 'descripcion ',
       })
+
     }
     console.log(JSON);
    fetch("http://192.168.1.40:8000/v2/update-perfil/", data)
@@ -91,7 +92,8 @@ export default class App extends Component<{}> {
      })
      console.log(data);
 
- }
+   }
+
 
 
  chooseImage(){
@@ -107,7 +109,7 @@ export default class App extends Component<{}> {
         console.log('User tapped custom button: ', response.customButton);
       } else{
 
-        let source ={uri: response.uri.replace('file://', ''), isStatic: ture};
+        let source ={uri: response.uri.replace('file://', ''), isStatic: true};
 
         if(Platform.OS === 'android'){
            source = {uri: response.uri, isStatic: true};
@@ -143,7 +145,9 @@ export default class App extends Component<{}> {
                   title='POST'
                   onPress={this._Post}/>
 
-          <Button style={styles.button} onPress={this.chooseImage} title='PHOTO'/>
+          <Button style={styles.button}
+                  onPress={this.chooseImage}
+                  title='PHOTO'/>
       </View>
     );
   }
