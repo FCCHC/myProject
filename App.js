@@ -67,36 +67,9 @@ export default class App extends Component<{}> {
  _Post(){
    console.log('CLICK');
     path=this.state.image.uri
-
-      /*data = new FormData();
-       data.append('picture', {uri:path , name:'avatar.jpg', type: 'image/jpg'});*/
-  /*  const data ={
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type':'application/json',
-        'Authorization': '85f174a8a4039b4835da182c8fcfdfd35f2d0e55',
-      },
-      body: JSON.stringify({
-        avatar : 'path',
-        password : '54321',
-        nickname :'aortega',
-        descripcion : 'descripcion',
-      })
-
-    }
-    console.log(JSON);
-   fetch("http://192.168.1.40:8000/v2/update-perfil/", data)
-     .then((responseJson) => {
-       console.log(responseJson);
-     })
-     .catch(err =>{
-       console.error(err);
-     })
-     console.log(data);*/
-
+  
      RNFetchBlob.fetch('POST','http://192.168.1.40:8000/v2/update-perfil/',{
-       Authorization : '613cb7c5dc0014460adec3fc9736cae2078ee392',
+       Authorization : 'Bearer 7e9448ff945688c22e514e7bacf01d619c8061b0',
        'Content-Type': 'multipart/form-data',
      }, [
        {
@@ -105,11 +78,10 @@ export default class App extends Component<{}> {
          data: RNFetchBlob.wrap(path)
        },
        //elements that will be sent as plain text
-       { data : JSON.stringify({
-         'username' : 'aortega',
-         'nickname' : '54321',
-         'descripcion' : 'descripcion',
-       })},
+       { name : 'token', data :'7e9448ff945688c22e514e7bacf01d619c8061b0'},
+       { name : 'password', data : '54321'},
+       { name : 'nickname', data : 'aortega'},
+       {name : 'descripcion', data : 'descripcion'},
 
      ]).then((resp)=>{
           console.log(resp);
@@ -135,7 +107,7 @@ export default class App extends Component<{}> {
         let source ={uri: response.uri.replace('file://', ''), isStatic: true};
 
         if(Platform.OS === 'android'){
-           source = {uri: response.uri, isStatic: true};
+           source = {uri: response.path, isStatic: true};
         }
 
         this.setState({image: source});
