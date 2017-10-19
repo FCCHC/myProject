@@ -28,6 +28,8 @@ import {
 
 } from 'react-native';
 
+import RNFetchBlob from 'react-native-fetch-blob'
+
 var ImagePicker = require('react-native-image-picker');
 
 export default class App extends Component<{}> {
@@ -64,21 +66,22 @@ export default class App extends Component<{}> {
 
  _Post(){
    console.log('CLICK');
+    path=this.state.image.uri
 
       /*data = new FormData();
-       data.append('picture', {uri:'' , name:'avatar.jpg', type: 'image/jpg'});*/
-    const data ={
+       data.append('picture', {uri:path , name:'avatar.jpg', type: 'image/jpg'});*/
+  /*  const data ={
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type':'application/json',
-        'Authorization': '85f174a8a4039b4835da182c8fcfdfd35f2d0e55'
+        'Authorization': '85f174a8a4039b4835da182c8fcfdfd35f2d0e55',
       },
       body: JSON.stringify({
-        avatar : '',
+        avatar : 'path',
         password : '54321',
         nickname :'aortega',
-        descripcion : 'descripcion ',
+        descripcion : 'descripcion',
       })
 
     }
@@ -90,11 +93,31 @@ export default class App extends Component<{}> {
      .catch(err =>{
        console.error(err);
      })
-     console.log(data);
+     console.log(data);*/
 
-   }
+     RNFetchBlob.fetch('POST','http://192.168.1.40:8000/v2/update-perfil/',{
+       Authorization : '613cb7c5dc0014460adec3fc9736cae2078ee392',
+       'Content-Type': 'multipart/form-data',
+     }, [
+       {
+         name : 'avatar',
+         filename : 'avatar.jpg',
+         data: RNFetchBlob.wrap(path)
+       },
+       //elements that will be sent as plain text
+       { data : JSON.stringify({
+         'username' : 'aortega',
+         'nickname' : '54321',
+         'descripcion' : 'descripcion',
+       })},
 
+     ]).then((resp)=>{
+          console.log(resp);
+     }).catch((err) => {console.error(err)
 
+   })
+
+}
 
  chooseImage(){
    ImagePicker.showImagePicker((response)=> {
@@ -116,6 +139,7 @@ export default class App extends Component<{}> {
         }
 
         this.setState({image: source});
+        console.log(this.state.image);
       }
    });
  }
