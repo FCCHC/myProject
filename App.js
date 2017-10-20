@@ -32,36 +32,85 @@ import RadioForm, {RadioButton,
                    RadioButtonInput,
                    RadioButtonLabel} from 'react-native-simple-radio-button'
 
+//import {FormLabel, FormInput} from 'react-native-elements'
 export default class App extends Component<{}> {
   constructor(props){
     super(props);
      this.state = {
-     value : 0
+     value : null,
+     nombre: null,
+     ciudad: null,
 
   }
 
+  this.ValidateInfo = this.ValidateInfo.bind(this);
+
 }
 
+
+ValidateInfo(){
+
+  name = this.state.nombre
+  param = this.state.value
+  city = this.state.ciudad
+
+  if(name && param && city){
+   Alert.alert('BIEN!')
+ }
+ else {
+   Alert.alert('Rellena los campos faltantes')
+ }
+}
 
   render() {
 
 
     const radio_props = [
-      {label: 'param1', value: 0},
-      {label: 'param2', value: 1}
+      {label: 'Si', value: 1},
+      {label: 'No', value: 2}
     ];
 
     return (
-      <View>
+      <View style={styles.container}>
+         {console.log('running')}
 
-        <Text>PREGUNTA NUMERO UNO</Text>
+        <Text>Ingresa tu nombre</Text>
+        <TextInput
+           style={{height: 40}}
+           maxLength = {40}
+           placeholder ='Nombre completo'
+           onChangeText={(text) => this.setState({nombre:text})}
+           onEndEditing={(text) => this.setState({nombre:text})}
+           />
+
+        <Text>Ingresa tu ciudad</Text>
+        <TextInput
+              style={{height: 40}}
+              maxLength = {40}
+              placeholder ='Ciudad'
+              onChangeText={(text) => this.setState({ciudad:text})}
+              onEndEditing={(text) => this.setState({ciudad:text})}
+              />
+
+
+        <Text style={styles.question}>Te gusta viajar?</Text>
+
         <RadioForm
-         radio_props={radio_props}
-         initial= {0}
-         onPress={(value) => {this.setState({value:value})}}
-         buttonColor={'#f48042'}
-         animation={true}
-       />
+            radio_props={radio_props}
+            initial={-1}
+            formHorizontal={true}
+            labelHorizontal={true}
+            styles
+            animation={true}
+            style={{margin: 2}}
+            onPress={(text)=>{this.setState({value:text})}}
+            labelStyle={{margin:2}}
+          />
+
+
+     <Button
+         onPress={this.ValidateInfo}
+         title = 'ENVIAR'/>
       </View>
 
     );
@@ -72,8 +121,13 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     flex: 1,
-    justifyContent: 'flex-start',
     backgroundColor: '#F5FCFF',
+  },
+
+  question: {
+    fontSize: 20,
+    paddingLeft: 10,
+    color: 'black',
   },
   welcome: {
     fontSize: 20,
