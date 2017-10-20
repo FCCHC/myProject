@@ -30,16 +30,19 @@ import {
 
 import RadioForm, {RadioButton,
                    RadioButtonInput,
-                   RadioButtonLabel} from 'react-native-simple-radio-button'
+                   RadioButtonLabel} from 'react-native-simple-radio-button';
+
+
 
 //import {FormLabel, FormInput} from 'react-native-elements'
 export default class App extends Component<{}> {
   constructor(props){
     super(props);
      this.state = {
-     value : null,
-     nombre: null,
-     ciudad: null,
+     value : -1,
+     nombre: '',
+     ciudad: '',
+     color: false,
 
   }
 
@@ -54,11 +57,23 @@ ValidateInfo(){
   param = this.state.value
   city = this.state.ciudad
 
+
   if(name && param && city){
+
+   this.setState({
+     value : -1,
+     nombre: '',
+     ciudad: '',
+     color: false
+   })
+
    Alert.alert('BIEN!')
  }
  else {
-   Alert.alert('Rellena los campos faltantes')
+  this.setState({
+
+    color : true
+  })
  }
 }
 
@@ -74,13 +89,14 @@ ValidateInfo(){
       <View style={styles.container}>
          {console.log('running')}
 
+
         <Text>Ingresa tu nombre</Text>
         <TextInput
            style={{height: 40}}
            maxLength = {40}
            placeholder ='Nombre completo'
-           onChangeText={(text) => this.setState({nombre:text})}
-           onEndEditing={(text) => this.setState({nombre:text})}
+           onChangeText={(text) => this.setState({nombre:text,color:false})}
+           underlineColorAndroid={this.state.color && (this.state.ciudad === '') ? 'red': ''}
            />
 
         <Text>Ingresa tu ciudad</Text>
@@ -88,8 +104,8 @@ ValidateInfo(){
               style={{height: 40}}
               maxLength = {40}
               placeholder ='Ciudad'
-              onChangeText={(text) => this.setState({ciudad:text})}
-              onEndEditing={(text) => this.setState({ciudad:text})}
+              onChangeText={(text) => this.setState({ciudad:text,color:false})}
+              underlineColorAndroid={this.state.color && (this.state.ciudad === '') ? 'red': ''}
               />
 
 
@@ -100,9 +116,9 @@ ValidateInfo(){
             initial={-1}
             formHorizontal={true}
             labelHorizontal={true}
-            styles
+            buttonInnerColor={this.state.color && (this.state.value === -1) ?  'orangered': ''}
             animation={true}
-            style={{margin: 2}}
+            style={{}}
             onPress={(text)=>{this.setState({value:text})}}
             labelStyle={{margin:2}}
           />
