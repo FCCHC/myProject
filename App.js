@@ -78,16 +78,19 @@ ValidateInfo(){
       <View style={styles.container}>
          {console.log('running')}
 
+           <Text style={styles.welcome}>ENCUESTA</Text>
 
           <Question pregunta="Ingresa tu nombre"
+                    styleText={styles.question}
                     placeholder='Nombre Completo'
                     onChange = {(text) => this.setState({nombre:text,color:false})}
-                    condition = {this.state.color && this.state.nombre === '' ? 'red': 'blue'}/>
+                    condition = {this.state.color && this.state.nombre === '' ? 'red': '#007AFF'}/>
 
           <Question pregunta = "Ingresa tu ciudad"
+                    styleText={styles.question}
                     placeholder='Ciudad'
                     onChange = {(text) => this.setState({ciudad :text, color:false})}
-                    condition = {this.state.color && this.state.ciudad === '' ? 'red' : 'blue'} />
+                    condition = {this.state.color && this.state.ciudad === '' ? 'red' : '#007AFF'} />
 
 
          <Text style={styles.question}>Genero</Text>
@@ -132,7 +135,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
-    color: 'red',
+    color: 'black',
+    fontFamily: 'Roboto'
 
   },
   instructions: {

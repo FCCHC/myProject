@@ -7,7 +7,7 @@ class Question extends Component {
 render(){
   return(
    <View>
-    <Text>{this.props.pregunta}</Text>
+    <Text style={this.props.styleText}>{this.props.pregunta}</Text>
 
     <TextInput style={{height: 40}}
                maxLength = {40}
