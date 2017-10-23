@@ -39,7 +39,7 @@ export default class App extends Component<{}> {
   constructor(props){
     super(props);
      this.state = {
-     value : -1,
+     value : 0,
      nombre: '',
      ciudad: '',
      color: false,
@@ -60,14 +60,16 @@ ValidateInfo(){
 
   if(name && param && city){
 
+  Alert.alert('BIEN!');
+
    this.setState({
-     value : -1,
+     value : 0,
      nombre: '',
      ciudad: '',
      color: false
    })
 
-   Alert.alert('BIEN!')
+
  }
  else {
   this.setState({
@@ -96,7 +98,7 @@ ValidateInfo(){
            maxLength = {40}
            placeholder ='Nombre completo'
            onChangeText={(text) => this.setState({nombre:text,color:false})}
-           underlineColorAndroid={this.state.color && (this.state.ciudad === '') ? 'red': ''}
+           underlineColorAndroid={this.state.color && this.state.nombre === '' ? 'red': 'blue'}
            />
 
         <Text>Ingresa tu ciudad</Text>
@@ -105,7 +107,7 @@ ValidateInfo(){
               maxLength = {40}
               placeholder ='Ciudad'
               onChangeText={(text) => this.setState({ciudad:text,color:false})}
-              underlineColorAndroid={this.state.color && (this.state.ciudad === '') ? 'red': ''}
+              underlineColorAndroid={this.state.color && this.state.ciudad === '' ? 'red': 'blue'}
               />
 
 
@@ -116,9 +118,7 @@ ValidateInfo(){
             initial={-1}
             formHorizontal={true}
             labelHorizontal={true}
-            buttonInnerColor={this.state.color && (this.state.value === -1) ?  'orangered': ''}
-            animation={true}
-            style={{}}
+            buttonColor={this.state.color && (this.state.value === 0) ?  'red': ''}
             onPress={(text)=>{this.setState({value:text})}}
             labelStyle={{margin:2}}
           />
