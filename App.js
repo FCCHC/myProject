@@ -13,28 +13,13 @@ import {
   TextInput,
   Button,
   Alert,
-  TouchableNativeFeedback,
-  ScrollView,
-  Image,
-  FlatList,
-  ListView,
-  ActivityIndicator,
   Picker,
-  YearPicker,
-  CheckBox,
-  StatusBar,
-  Navigator,
-  TouchableOpacity,
 
 } from 'react-native';
 
 import Question from './src/components/question.js'
 
-import RadioForm, {RadioButton,
-                   RadioButtonInput,
-                   RadioButtonLabel} from 'react-native-simple-radio-button';
-
-
+import RadioQuestion from './src/components/radioQuestion.js'
 
 //import {FormLabel, FormInput} from 'react-native-elements'
 export default class App extends Component<{}> {
@@ -90,10 +75,10 @@ ValidateInfo(){
     ];
 
     return (
-
-
       <View style={styles.container}>
          {console.log('running')}
+
+
           <Question pregunta="Ingresa tu nombre"
                     placeholder='Nombre Completo'
                     onChange = {(text) => this.setState({nombre:text,color:false})}
@@ -114,18 +99,12 @@ ValidateInfo(){
                 <Picker.Item label='Masculino' value = 'masculino'/>
          </Picker>
 
-
-        <Text style={styles.question}>Te gusta viajar?</Text>
-
-        <RadioForm
-            radio_props={radio_props}
-            initial={-1}
-            formHorizontal={true}
-            labelHorizontal={true}
-            buttonColor={this.state.color && (this.state.value === 0) ?  'red': ''}
-            onPress={(text)=>{this.setState({value:text})}}
-            labelStyle={{margin:2}}
-          />
+         <RadioQuestion pregunta="Te gusta viajar?"
+                        styleText={styles.question}
+                        radioProps={radio_props}
+                        buttonColor={this.state.color && (this.state.value === 0) ?  'red': ''}
+                        onPress={(text)=>{this.setState({value:text})}}
+                        />
 
 
         <Button
