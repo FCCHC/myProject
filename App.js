@@ -43,6 +43,7 @@ export default class App extends Component<{}> {
      nombre: '',
      ciudad: '',
      color: false,
+     genero: '',
 
   }
 
@@ -69,7 +70,6 @@ ValidateInfo(){
      color: false
    })
 
-
  }
  else {
   this.setState({
@@ -88,11 +88,13 @@ ValidateInfo(){
     ];
 
     return (
+
+
       <View style={styles.container}>
          {console.log('running')}
 
 
-        <Text>Ingresa tu nombre</Text>
+        <Text style={styles.question}>Ingresa tu nombre</Text>
         <TextInput
            style={{height: 40}}
            maxLength = {40}
@@ -101,7 +103,8 @@ ValidateInfo(){
            underlineColorAndroid={this.state.color && this.state.nombre === '' ? 'red': 'blue'}
            />
 
-        <Text>Ingresa tu ciudad</Text>
+        <Text style={styles.question}>Ingresa tu ciudad</Text>
+
         <TextInput
               style={{height: 40}}
               maxLength = {40}
@@ -109,6 +112,14 @@ ValidateInfo(){
               onChangeText={(text) => this.setState({ciudad:text,color:false})}
               underlineColorAndroid={this.state.color && this.state.ciudad === '' ? 'red': 'blue'}
               />
+
+       <Text style={styles.question}>Genero</Text>
+       <Picker selectedValue ={this.state.genero}
+               onValueChange={(itemValue, itemIndex) => this.setState({genero:itemValue})}>
+
+              <Picker.Item label='Femenino' value="femenino"/>
+              <Picker.Item label='Masculino' value = 'masculino'/>
+             </Picker>
 
 
         <Text style={styles.question}>Te gusta viajar?</Text>
@@ -141,7 +152,7 @@ const styles = StyleSheet.create({
   },
 
   question: {
-    fontSize: 20,
+    fontSize: 15,
     paddingLeft: 10,
     color: 'black',
   },
@@ -180,5 +191,9 @@ const styles = StyleSheet.create({
   },
   picker: {
     backgroundColor:'blue'
-  }
+  },
+  text: {
+    color: 'black',
+    fontSize: 14,
+  },
 });
