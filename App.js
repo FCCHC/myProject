@@ -28,6 +28,8 @@ import {
 
 } from 'react-native';
 
+import Question from './src/components/question.js'
+
 import RadioForm, {RadioButton,
                    RadioButtonInput,
                    RadioButtonLabel} from 'react-native-simple-radio-button';
@@ -69,8 +71,8 @@ ValidateInfo(){
      ciudad: '',
      color: false
    })
-
  }
+
  else {
   this.setState({
 
@@ -92,34 +94,25 @@ ValidateInfo(){
 
       <View style={styles.container}>
          {console.log('running')}
+          <Question pregunta="Ingresa tu nombre"
+                    placeholder='Nombre Completo'
+                    onChange = {(text) => this.setState({nombre:text,color:false})}
+                    condition = {this.state.color && this.state.nombre === '' ? 'red': 'blue'}/>
+
+          <Question pregunta = "Ingresa tu ciudad"
+                    placeholder='Ciudad'
+                    onChange = {(text) => this.setState({ciudad :text, color:false})}
+                    condition = {this.state.color && this.state.ciudad === '' ? 'red' : 'blue'} />
 
 
-        <Text style={styles.question}>Ingresa tu nombre</Text>
-        <TextInput
-           style={{height: 40}}
-           maxLength = {40}
-           placeholder ='Nombre completo'
-           onChangeText={(text) => this.setState({nombre:text,color:false})}
-           underlineColorAndroid={this.state.color && this.state.nombre === '' ? 'red': 'blue'}
-           />
+         <Text style={styles.question}>Genero</Text>
+         <Picker selectedValue ={this.state.genero}
+                 onValueChange={(itemValue, itemIndex) => this.setState({genero:itemValue})}
+                 mode='dropdown'>
 
-        <Text style={styles.question}>Ingresa tu ciudad</Text>
-
-        <TextInput
-              style={{height: 40}}
-              maxLength = {40}
-              placeholder ='Ciudad'
-              onChangeText={(text) => this.setState({ciudad:text,color:false})}
-              underlineColorAndroid={this.state.color && this.state.ciudad === '' ? 'red': 'blue'}
-              />
-
-       <Text style={styles.question}>Genero</Text>
-       <Picker selectedValue ={this.state.genero}
-               onValueChange={(itemValue, itemIndex) => this.setState({genero:itemValue})}>
-
-              <Picker.Item label='Femenino' value="femenino"/>
-              <Picker.Item label='Masculino' value = 'masculino'/>
-             </Picker>
+                <Picker.Item label='Femenino' value="femenino"/>
+                <Picker.Item label='Masculino' value = 'masculino'/>
+         </Picker>
 
 
         <Text style={styles.question}>Te gusta viajar?</Text>
@@ -135,9 +128,9 @@ ValidateInfo(){
           />
 
 
-     <Button
-         onPress={this.ValidateInfo}
-         title = 'ENVIAR'/>
+        <Button
+               onPress={this.ValidateInfo}
+               title = 'ENVIAR'/>
       </View>
 
     );
