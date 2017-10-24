@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import {Text,TextInput,View,} from 'react-native';
+import {Text,TextInput,View,  StyleSheet,} from 'react-native';
 
 import RadioForm, {RadioButton,
                    RadioButtonInput,
@@ -12,8 +12,8 @@ class RadioQuestion extends Component {
 
     return(
 <View>
-      <Text style={this.props.styleText}>{this.props.pregunta}</Text>
-
+  <Text style={this.props.styleText}>{this.props.pregunta}</Text>
+    <View style={styles.radioContainer}>
       <RadioForm
           radio_props={this.props.radioProps}
           initial={-1}
@@ -21,12 +21,18 @@ class RadioQuestion extends Component {
           labelHorizontal={true}
           buttonColor={this.props.buttonColor}
           onPress={this.props.onPress}
-          labelStyle={{margin:2}}
+          labelStyle={{marginRight:10}}
         />
+    </View>
 </View>
     )
   }
 }
 
+const styles = StyleSheet.create({
+     radioContainer:{
+       marginLeft:20
+     }
+})
 
 export default RadioQuestion;

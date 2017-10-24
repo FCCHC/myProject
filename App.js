@@ -77,8 +77,8 @@ ValidateInfo(){
     return (
       <View style={styles.container}>
          {console.log('running')}
-
-           <Text style={styles.welcome}>ENCUESTA</Text>
+        <View style={styles.containerQuestion}>
+          <Text style={styles.welcome}>ENCUESTA</Text>
 
           <Question pregunta="Ingresa tu nombre"
                     styleText={styles.question}
@@ -108,12 +108,16 @@ ValidateInfo(){
                         buttonColor={this.state.color && (this.state.value === 0) ?  'red': ''}
                         onPress={(text)=>{this.setState({value:text})}}
                         />
+       </View>
+       <View style={styles.buttonContainer}>
+          <Button
+                onPress={this.ValidateInfo}
+                title = 'ENVIAR'
+                color='#007AFF'
+                />
+        </View>
 
-
-        <Button
-               onPress={this.ValidateInfo}
-               title = 'ENVIAR'/>
-      </View>
+    </View>
 
     );
   }
@@ -130,6 +134,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     paddingLeft: 10,
     color: 'black',
+    marginBottom: 10,
   },
   welcome: {
     fontSize: 20,
@@ -144,11 +149,13 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
-  button: {
-    marginBottom: 30,
-    width: 260,
-    alignItems: 'center',
-    backgroundColor: '#2119F3'
+  buttonContainer: {
+    marginTop:200,
+    marginLeft:110,
+    flexDirection: 'column',
+    justifyContent:'center',
+    width:200,
+    height:40,
   },
   buttonText: {
     padding: 20,
@@ -171,5 +178,9 @@ const styles = StyleSheet.create({
   text: {
     color: 'black',
     fontSize: 14,
+  },
+  containerQuestion:{
+    flexDirection:'column',
+    justifyContent:'space-between',
   },
 });
