@@ -14,14 +14,16 @@ import {
   Button,
   Alert,
   Picker,
+  ViewPagerAndroid,
 
 } from 'react-native';
 
-import Question from './src/components/question.js'
+import Question from './src/components/question.js';
 
-import RadioQuestion from './src/components/radioQuestion.js'
+import RadioQuestion from './src/components/radioQuestion.js';
 
 //import {FormLabel, FormInput} from 'react-native-elements'
+
 export default class App extends Component<{}> {
   constructor(props){
     super(props);
@@ -67,18 +69,22 @@ ValidateInfo(){
 }
 
   render() {
-
-
     const radio_props = [
       {label: 'Si', value: 1},
       {label: 'No', value: 2}
     ];
 
+
     return (
+
       <View style={styles.container}>
+
          {console.log('running')}
         <View style={styles.containerQuestion}>
+
           <Text style={styles.welcome}>ENCUESTA</Text>
+
+
 
           <Question pregunta="Ingresa tu nombre"
                     styleText={styles.question}
@@ -109,13 +115,17 @@ ValidateInfo(){
                         onPress={(text)=>{this.setState({value:text})}}
                         />
        </View>
+
+
        <View style={styles.buttonContainer}>
           <Button
                 onPress={this.ValidateInfo}
                 title = 'ENVIAR'
                 color='#007AFF'
                 />
+
         </View>
+
 
     </View>
 
