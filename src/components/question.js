@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 
-import {Text,TextInput,View,} from 'react-native';
+import {Text,TextInput,View,  StyleSheet,} from 'react-native';
 
 class Question extends Component {
 
 render(){
   return(
-   <View>
+   <View style={styles.Container}>
     <Text style={this.props.styleText}>{this.props.pregunta}</Text>
 
-    <TextInput style={{height: 40}}
+    <TextInput style={styles.textInput}
                maxLength = {40}
                placeholder ={this.props.placeholder}
                onChangeText={this.props.onChange}
@@ -22,5 +22,16 @@ render(){
 
 }
 
+const styles = StyleSheet.create({
+  Container:{
+    flexDirection:'row',
+  },
+  textInput:{
+    width:250,
+    height:40,
+    borderStyle: 'solid',
+    marginLeft:30
+  },
+})
 
 export default Question;

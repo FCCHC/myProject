@@ -11,7 +11,7 @@ class RadioQuestion extends Component {
   render(){
 
     return(
-<View>
+<View style={styles.container}>
   <Text style={this.props.styleText}>{this.props.pregunta}</Text>
     <View style={styles.radioContainer}>
       <RadioForm
@@ -31,7 +31,11 @@ class RadioQuestion extends Component {
 
 const styles = StyleSheet.create({
      radioContainer:{
-       marginLeft:20
+       marginLeft:30,
+
+     },
+     container: {
+       flexDirection:'row',
      }
 })
 

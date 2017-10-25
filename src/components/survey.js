@@ -78,30 +78,31 @@ class Survey extends Component{
 
 
     return (
-
       <View style={styles.container}>
-
+<Text style={styles.welcome}>ENCUESTA</Text>
          {console.log('running')}
         <View style={styles.containerQuestion}>
 
-          <Text style={styles.welcome}>ENCUESTA</Text>
 
 
 
-          <Question pregunta="Ingresa tu nombre"
+
+          <Question pregunta= "Nombre"
                     styleText={styles.question}
                     placeholder='Nombre Completo'
                     onChange = {(text) => this.setState({nombre:text,color:false})}
                     condition = {this.state.color && this.state.nombre === '' ? 'red': '#007AFF'}/>
 
-          <Question pregunta = "Ingresa tu ciudad"
+          <Question pregunta = "Ciudad "
                     styleText={styles.question}
                     placeholder='Ciudad'
                     onChange = {(text) => this.setState({ciudad :text, color:false})}
                     condition = {this.state.color && this.state.ciudad === '' ? 'red' : '#007AFF'} />
 
-          <Text style={styles.question}>Ingresa tu fecha de nacimiento</Text>
-          <DatePicker style={{width:200, borderColor:'black'}}
+
+  <View style={{flexDirection:'row',marginTop:20}}>
+          <Text style={styles.question}>Fecha Nacimiento</Text>
+          <DatePicker style={{width:160,marginLeft:40}}
                       date={this.state.date}
                       mode='date'
                       placeholder="Select date"
@@ -110,35 +111,43 @@ class Survey extends Component{
                       cancelBtnText="Cancel"
                       androidMode='spinner'
                       onDateChange={(date)=> {this.setState({date:date})}}
-                      customStyles= {this.state.color && this.state.date === '' ? {dateInput: {borderColor:'red', marginLeft:36}, dateIcon:{position:'absolute',left:0,top:4,marginLeft:0}} : {dateIcon: {
+                      customStyles= {this.state.color && this.state.date === '' ? {dateInput: {borderColor:'red', marginLeft:0}, dateIcon:{position:'absolute',left:0,top:4,marginLeft:0}} : {dateIcon: {
                                      position: 'absolute',
                                      left: 0,
                                      top: 4,
                                      marginLeft: 0
                                      },
                                      dateInput: {
-                                     marginLeft: 36
+                                     marginLeft:0
                                     }}}
                                />
 
 
+     </View>
 
+        <View style={{flexDirection:'row', marginTop:20}}>
          <Text style={styles.question}>Genero</Text>
          <Picker selectedValue ={this.state.genero}
                  onValueChange={(itemValue, itemIndex) => this.setState({genero:itemValue})}
-                 mode='dropdown'>
+                 mode='dropdown'
+                 style={{width:170,marginLeft:110}}
+               >
 
                 <Picker.Item label='Femenino' value="femenino"/>
                 <Picker.Item label='Masculino' value = 'masculino'/>
          </Picker>
-
+         </View>
+    </View>
          <RadioQuestion pregunta="Te gusta viajar?"
                         styleText={styles.question}
                         radioProps={radio_props}
                         buttonColor={this.state.color && (this.state.value === 0) ?  'red': ''}
                         onPress={(text)=>{this.setState({value:text})}}
                         />
-       </View>
+
+
+
+
 
 
        <View style={styles.buttonContainer}>
@@ -162,21 +171,21 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     flex: 1,
-    backgroundColor: '#F5FCFF',
   },
 
   question: {
     fontSize: 15,
-    paddingLeft: 10,
     color: 'black',
-    marginBottom: 10,
+    marginLeft:50,
+    marginTop:10,
+
   },
   welcome: {
     fontSize: 20,
     textAlign: 'center',
     margin: 10,
     color: 'black',
-    fontFamily: 'Roboto'
+    fontFamily: 'Roboto',
 
   },
   instructions: {
@@ -194,21 +203,21 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     padding: 20,
-    color: 'white'
+    color: 'white',
   },
   image: {
     justifyContent: 'center',
     alignItems: 'center',
     width:40,
-    height:40
+    height:40,
   },
   item: {
     padding: 10,
     fontSize: 18,
-    height: 44
+    height: 44,
   },
   picker: {
-    backgroundColor:'blue'
+    backgroundColor:'blue',
   },
   text: {
     color: 'black',
@@ -216,7 +225,9 @@ const styles = StyleSheet.create({
   },
   containerQuestion:{
     flexDirection:'column',
-    justifyContent:'space-between',
+    justifyContent:'center',
+    width:400,
+
   },
 });
 
