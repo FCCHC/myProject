@@ -9,12 +9,15 @@ import {
   Alert,
   Picker,
   ViewPagerAndroid,
+  DatePickerAndroid,
 
 } from 'react-native';
 
 import Question from './question.js';
 
 import RadioQuestion from './radioQuestion.js';
+
+import DatePicker from 'react-native-datepicker';
 
 class Survey extends Component{
 
@@ -26,6 +29,7 @@ class Survey extends Component{
      ciudad: '',
      color: false,
      genero: '',
+     date:'',
 
   }
 
@@ -39,9 +43,10 @@ class Survey extends Component{
   name = this.state.nombre
   param = this.state.value
   city = this.state.ciudad
+  fecha = this.state.date
 
 
-  if(name && param && city){
+  if(name && param && city && fecha){
 
   Alert.alert('BIEN!');
 
@@ -49,7 +54,8 @@ class Survey extends Component{
      value : 0,
      nombre: '',
      ciudad: '',
-     color: false
+     date:'',
+     color: false,
    })
   }
 
@@ -61,11 +67,14 @@ class Survey extends Component{
   }
   }
 
+
+
   render() {
     const radio_props = [
       {label: 'Si', value: 1},
       {label: 'No', value: 2}
     ];
+
 
 
     return (
@@ -90,6 +99,28 @@ class Survey extends Component{
                     placeholder='Ciudad'
                     onChange = {(text) => this.setState({ciudad :text, color:false})}
                     condition = {this.state.color && this.state.ciudad === '' ? 'red' : '#007AFF'} />
+
+          <Text style={styles.question}>Ingresa tu fecha de nacimiento</Text>
+          <DatePicker style={{width:200, borderColor:'black'}}
+                      date={this.state.date}
+                      mode='date'
+                      placeholder="Select date"
+                      format="YYYY-MM-DD"
+                      confirmBtnText='Confirm'
+                      cancelBtnText="Cancel"
+                      androidMode='spinner'
+                      onDateChange={(date)=> {this.setState({date:date})}}
+                      customStyles= {this.state.color && this.state.date === '' ? {dateInput: {borderColor:'red', marginLeft:36}, dateIcon:{position:'absolute',left:0,top:4,marginLeft:0}} : {dateIcon: {
+                                     position: 'absolute',
+                                     left: 0,
+                                     top: 4,
+                                     marginLeft: 0
+                                     },
+                                     dateInput: {
+                                     marginLeft: 36
+                                    }}}
+                               />
+
 
 
          <Text style={styles.question}>Genero</Text>
