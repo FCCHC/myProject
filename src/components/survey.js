@@ -91,13 +91,13 @@ class Survey extends Component{
                     styleText={styles.question}
                     placeholder='Nombre Completo'
                     onChange = {(text) => this.setState({nombre:text,color:false})}
-                    condition = {this.state.color && this.state.nombre === '' ? 'red': '#007AFF'}/>
+                    condition = {this.state.color && this.state.nombre === 'transparent' ? 'red': 'transparent'}/>
 
           <Question pregunta = "Ciudad "
                     styleText={styles.question}
                     placeholder='Ciudad'
                     onChange = {(text) => this.setState({ciudad :text, color:false})}
-                    condition = {this.state.color && this.state.ciudad === '' ? 'red' : '#007AFF'} />
+                    condition = {this.state.color && this.state.ciudad === 'transparent' ? 'red' : 'transparent'} />
 
 
   <View style={{flexDirection:'row',marginTop:20}}>
