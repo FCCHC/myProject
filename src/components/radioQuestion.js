@@ -21,7 +21,7 @@ class RadioQuestion extends Component {
           labelHorizontal={true}
           buttonColor={this.props.buttonColor}
           onPress={this.props.onPress}
-          labelStyle={{marginRight:10}}
+          labelStyle={{marginRight:10, fontWeight:'bold',}}
         />
     </View>
 </View>

@@ -10,6 +10,7 @@ import {
   Picker,
   ViewPagerAndroid,
   DatePickerAndroid,
+  Image,
 
 } from 'react-native';
 
@@ -26,10 +27,12 @@ class Survey extends Component{
      this.state = {
      value : 0,
      nombre: '',
-     ciudad: '',
+     apellido: '',
      color: false,
      genero: '',
      date:'',
+     telefono:'',
+     correo:'',
 
   }
 
@@ -42,18 +45,19 @@ class Survey extends Component{
 
   name = this.state.nombre
   param = this.state.value
-  city = this.state.ciudad
+  lastname = this.state.apellido
   fecha = this.state.date
+  cel = this.state.telefono
+  mail = this.state.correo
 
-
-  if(name && param && city && fecha){
+  if(name && param && lastname && fecha && telefono && mail){
 
   Alert.alert('BIEN!');
 
    this.setState({
      value : 0,
      nombre: '',
-     ciudad: '',
+     apellido: '',
      date:'',
      color: false,
    })
@@ -78,8 +82,12 @@ class Survey extends Component{
 
 
     return (
+
+      <Image source={require('./borabora.jpg')}
+             style={styles.backgroundImage}
+             resizeMode={Image.resizeMode.strech}>
       <View style={styles.container}>
-<Text style={styles.welcome}>ENCUESTA</Text>
+
          {console.log('running')}
         <View style={styles.containerQuestion}>
 
@@ -89,18 +97,36 @@ class Survey extends Component{
 
           <Question pregunta= "Nombre"
                     styleText={styles.question}
-                    placeholder='Nombre Completo'
+                    placeholder='Nombre'
                     onChange = {(text) => this.setState({nombre:text,color:false})}
                     condition = {this.state.color && this.state.nombre === '' ? 'red': 'transparent'}/>
-
-          <Question pregunta = "Ciudad "
+            </View>
+            <View style={styles.containerQuestion}>
+          <Question pregunta = "Apellido "
                     styleText={styles.question}
-                    placeholder='Ciudad'
-                    onChange = {(text) => this.setState({ciudad :text, color:false})}
+                    placeholder='Apellido'
+                    onChange = {(text) => this.setState({apellido :text, color:false})}
                     condition = {this.state.color && this.state.ciudad === '' ? 'red' : 'transparent'} />
+          </View>
+
+          <View style={styles.containerQuestion}>
+        <Question pregunta = "Celular "
+                  styleText={styles.question}
+                  placeholder='000000000'
+                  onChange = {(text) => this.setState({telefono :text, color:false})}
+                  condition = {this.state.color && this.state.telefono === '' ? 'red' : 'transparent'} />
+        </View>
+
+        <View style={styles.containerQuestion}>
+      <Question pregunta = "Correo "
+                styleText={styles.question}
+                placeholder='example@tucorreo.com'
+                onChange = {(text) => this.setState({correo :text, color:false})}
+                condition = {this.state.color && this.state.correo === '' ? 'red' : 'transparent'} />
+      </View>
 
 
-  <View style={{flexDirection:'row',marginTop:20}}>
+  <View style={{flexDirection:'row',marginTop:40}}>
           <Text style={styles.question}>Fecha Nacimiento</Text>
           <DatePicker style={{width:160,marginLeft:40}}
                       date={this.state.date}
@@ -118,6 +144,8 @@ class Survey extends Component{
                                      marginLeft: 0
                                      },
                                      dateInput: {
+                                     borderColor:'#d9d9d9',
+                                     borderRadius:5,
                                      marginLeft:0
                                     }}}
                                />
@@ -137,11 +165,11 @@ class Survey extends Component{
                 <Picker.Item label='Masculino' value = 'masculino'/>
          </Picker>
          </View>
-    </View>
+
          <RadioQuestion pregunta="Te gusta viajar?"
                         styleText={styles.question}
                         radioProps={radio_props}
-                        buttonColor={this.state.color && (this.state.value === 0) ?  'red': ''}
+                        buttonColor={this.state.color && (this.state.value === 0) ?  'red': 'orange'}
                         onPress={(text)=>{this.setState({value:text})}}
                         />
 
@@ -158,10 +186,10 @@ class Survey extends Component{
                 />
 
         </View>
-
-
     </View>
 
+
+</Image>
     );
   }
 }
@@ -171,14 +199,19 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     flex: 1,
+    marginTop:50,
   },
-
+  backgroundImage:{
+    flex:1,
+    width:null,
+    height:null,
+  },
   question: {
     fontSize: 15,
     color: 'black',
     marginLeft:50,
     marginTop:10,
-
+    fontWeight:'bold',
   },
   welcome: {
     fontSize: 20,
@@ -194,7 +227,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   buttonContainer: {
-    marginTop:200,
     marginLeft:110,
     flexDirection: 'column',
     justifyContent:'center',
@@ -227,7 +259,7 @@ const styles = StyleSheet.create({
     flexDirection:'column',
     justifyContent:'center',
     width:400,
-
+    marginTop:10,
   },
 });
 

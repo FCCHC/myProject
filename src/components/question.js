@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import {Text,TextInput,View,  StyleSheet,} from 'react-native';
 
+
 class Question extends Component {
 
 render(){
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
     marginLeft:30,
     marginTop:10,
     borderRadius: 10,
-    backgroundColor:'orange',
+    backgroundColor:'#d9d9d9',
   },
 })
 
