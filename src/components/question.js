@@ -25,7 +25,7 @@ render(){
 
 const styles = StyleSheet.create({
   Container:{
-    flexDirection:'row',
+    flexDirection:'column',
   },
   textInput:{
     width:250,

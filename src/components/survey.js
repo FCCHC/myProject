@@ -20,6 +20,10 @@ import RadioQuestion from './radioQuestion.js';
 
 import DatePicker from 'react-native-datepicker';
 
+import {StackNavigator} from 'react-navigation';
+
+import QuestionScreen from './questionScreen.js';
+
 class Survey extends Component{
 
   constructor(props){
@@ -52,15 +56,7 @@ class Survey extends Component{
 
   if(name && param && lastname && fecha && telefono && mail){
 
-  Alert.alert('BIEN!');
-
-   this.setState({
-     value : 0,
-     nombre: '',
-     apellido: '',
-     date:'',
-     color: false,
-   })
+     navigate('QuestionScreen');
   }
 
   else {
@@ -71,29 +67,31 @@ class Survey extends Component{
   }
   }
 
+  static navigationOptions={
+    title:'welcome',
+  };
 
 
   render() {
+
+
     const radio_props = [
       {label: 'Si', value: 1},
       {label: 'No', value: 2}
     ];
 
-
+   const {navigate} = this.props.navigation;
 
     return (
 
-      <Image source={require('./borabora.jpg')}
-             style={styles.backgroundImage}
-             resizeMode={Image.resizeMode.strech}>
+ <Image source={require('./borabora.jpg')}
+        style={styles.backgroundImage}
+        resizeMode={Image.resizeMode.strech}>
+
       <View style={styles.container}>
 
          {console.log('running')}
         <View style={styles.containerQuestion}>
-
-
-
-
 
           <Question pregunta= "Nombre"
                     styleText={styles.question}
@@ -165,30 +163,15 @@ class Survey extends Component{
                 <Picker.Item label='Masculino' value = 'masculino'/>
          </Picker>
          </View>
-
-         <RadioQuestion pregunta="Te gusta viajar?"
-                        styleText={styles.question}
-                        radioProps={radio_props}
-                        buttonColor={this.state.color && (this.state.value === 0) ?  'red': 'orange'}
-                        onPress={(text)=>{this.setState({value:text})}}
-                        />
-
-
-
-
-
-
        <View style={styles.buttonContainer}>
-          <Button
-                onPress={this.ValidateInfo}
-                title = 'ENVIAR'
+       <Button
+               onPress={()=> this.state.nombre ? navigate('QuestionScreen'):''}
+                title = 'SIGUIENTE'
                 color='#007AFF'
-                />
+              />
 
         </View>
     </View>
-
-
 </Image>
     );
   }
@@ -209,8 +192,9 @@ const styles = StyleSheet.create({
   question: {
     fontSize: 15,
     color: 'black',
-    marginLeft:50,
+    marginLeft:30,
     marginTop:10,
+    marginBottom:0,
     fontWeight:'bold',
   },
   welcome: {

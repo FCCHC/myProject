@@ -18,15 +18,20 @@ import {
 
 } from 'react-native';
 
-
-import Survey from './src/components/survey.js'
+import {StackNavigator} from 'react-navigation';
+import Survey from './src/components/survey.js';
+import QuestionScreen from './src/components/questionScreen.js';
 
 //import {FormLabel, FormInput} from 'react-native-elements'
 
+const SurveyApp = StackNavigator({
+  Home: { screen: Survey},
+  QuestionScreen: {screen: QuestionScreen},
+});
+
+
 export default class App extends Component<{}> {
   render(){
-    return(
-      <Survey />
-    )
+    return <SurveyApp/>;
   }
 }
