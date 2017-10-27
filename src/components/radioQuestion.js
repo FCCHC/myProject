@@ -8,20 +8,21 @@ import RadioForm, {RadioButton,
 
 class RadioQuestion extends Component {
 
+
   render(){
 
     return(
 <View style={styles.container}>
-  <Text style={this.props.styleText}>{this.props.pregunta}</Text>
+  <Text style={styles.question}>{this.props.pregunta}</Text>
     <View style={styles.radioContainer}>
       <RadioForm
           radio_props={this.props.radioProps}
           initial={-1}
-          formHorizontal={true}
+          formHorizontal={false}
           labelHorizontal={true}
           buttonColor={this.props.buttonColor}
           onPress={this.props.onPress}
-          labelStyle={{marginRight:10, fontWeight:'bold',}}
+          labelStyle={{ fontWeight:'bold',fontSize:25}}
         />
     </View>
 </View>
@@ -31,12 +32,25 @@ class RadioQuestion extends Component {
 
 const styles = StyleSheet.create({
      radioContainer:{
-       marginLeft:30,
+       marginTop:100,
 
      },
      container: {
-       flexDirection:'row',
-     }
+       flexDirection:'column',
+       alignItems:'center',
+       flex:1
+
+     },
+     question: {
+       backgroundColor:'#659bf2',
+       fontSize: 15,
+       color: 'black',
+       marginLeft:30,
+       marginTop:10,
+       marginBottom:0,
+       fontWeight:'bold',
+
+     },
 })
 
 export default RadioQuestion;

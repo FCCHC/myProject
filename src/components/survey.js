@@ -29,7 +29,6 @@ class Survey extends Component{
   constructor(props){
     super(props);
      this.state = {
-     value : 0,
      nombre: '',
      apellido: '',
      color: false,
@@ -48,7 +47,6 @@ class Survey extends Component{
   ValidateInfo(){
 
   name = this.state.nombre
-  param = this.state.value
   lastname = this.state.apellido
   fecha = this.state.date
   cel = this.state.telefono
@@ -75,13 +73,15 @@ class Survey extends Component{
   render() {
 
 
-    const radio_props = [
-      {label: 'Si', value: 1},
-      {label: 'No', value: 2}
-    ];
 
    const {navigate} = this.props.navigation;
 
+   name = this.state.nombre
+   lastname = this.state.apellido
+   fecha = this.state.date
+   cel = this.state.telefono
+   mail = this.state.correo
+   color = this.state.color
     return (
 
  <Image source={require('./borabora.jpg')}
@@ -97,14 +97,14 @@ class Survey extends Component{
                     styleText={styles.question}
                     placeholder='Nombre'
                     onChange = {(text) => this.setState({nombre:text,color:false})}
-                    condition = {this.state.color && this.state.nombre === '' ? 'red': 'transparent'}/>
+                    condition = {color && name === '' ? 'red': 'transparent'}/>
             </View>
             <View style={styles.containerQuestion}>
           <Question pregunta = "Apellido "
                     styleText={styles.question}
                     placeholder='Apellido'
                     onChange = {(text) => this.setState({apellido :text, color:false})}
-                    condition = {this.state.color && this.state.ciudad === '' ? 'red' : 'transparent'} />
+                    condition = {color && lastname === '' ? 'red' : 'transparent'} />
           </View>
 
           <View style={styles.containerQuestion}>
@@ -112,7 +112,7 @@ class Survey extends Component{
                   styleText={styles.question}
                   placeholder='000000000'
                   onChange = {(text) => this.setState({telefono :text, color:false})}
-                  condition = {this.state.color && this.state.telefono === '' ? 'red' : 'transparent'} />
+                  condition = {color && cel === '' ? 'red' : 'transparent'} />
         </View>
 
         <View style={styles.containerQuestion}>
@@ -120,7 +120,7 @@ class Survey extends Component{
                 styleText={styles.question}
                 placeholder='example@tucorreo.com'
                 onChange = {(text) => this.setState({correo :text, color:false})}
-                condition = {this.state.color && this.state.correo === '' ? 'red' : 'transparent'} />
+                condition = {color && mail === '' ? 'red' : 'transparent'} />
       </View>
 
 
@@ -135,7 +135,7 @@ class Survey extends Component{
                       cancelBtnText="Cancel"
                       androidMode='spinner'
                       onDateChange={(date)=> {this.setState({date:date})}}
-                      customStyles= {this.state.color && this.state.date === '' ? {dateInput: {borderColor:'red', marginLeft:0}, dateIcon:{position:'absolute',left:0,top:4,marginLeft:0}} : {dateIcon: {
+                      customStyles= {color && fecha === '' ? {dateInput: {borderColor:'red', marginLeft:0}, dateIcon:{position:'absolute',left:0,top:4,marginLeft:0}} : {dateIcon: {
                                      position: 'absolute',
                                      left: 0,
                                      top: 4,
@@ -165,7 +165,7 @@ class Survey extends Component{
          </View>
        <View style={styles.buttonContainer}>
        <Button
-               onPress={()=> this.state.nombre ? navigate('QuestionScreen'):''}
+                onPress={()=> navigate('QuestionScreen')}
                 title = 'SIGUIENTE'
                 color='#007AFF'
               />
