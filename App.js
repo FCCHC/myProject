@@ -21,12 +21,14 @@ import {
 import {StackNavigator} from 'react-navigation';
 import Survey from './src/components/survey.js';
 import QuestionScreen from './src/components/questionScreen.js';
+import SecondQuestionScreen from './src/components/secondQuestionScreen.js';
 
 //import {FormLabel, FormInput} from 'react-native-elements'
 
 const SurveyApp = StackNavigator({
   Home: { screen: Survey},
   QuestionScreen: {screen: QuestionScreen},
+  SecondQuestionScreen: {screen: SecondQuestionScreen},
 });
 
 

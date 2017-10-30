@@ -1,44 +1,43 @@
 import React, { Component } from 'react';
 
-import {Text,TextInput,View,  StyleSheet,Button} from 'react-native';
+import {Text,TextInput,View,  StyleSheet,Button,Alert} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 
 import RadioQuestion from './radioQuestion.js';
 
- class QuestionScreen extends Component {
+ class SecondQuestionScreen extends Component {
    constructor(props){
      super(props);
      this.state ={
        value:0,
-       color:false,
+       color: false,
      }
    }
    static navigationOptions={
      title:'QUESTION'
    }
   render(){
-        const {navigate} = this.props.navigation;
+
+     const color = this.state.color
+
 
         const radio_props = [
-          {label: 'Si', value: 1},
-          {label: 'No', value: 2}
+          {label: '2017', value: 1},
+          {label: '2018', value: 2}
         ];
-
-        const valor = this.state.value;
-        const color = this.state.color;
     return (
 
       <View style={styles.container}>
-  <RadioQuestion pregunta='Te gusta viajar?'
+  <RadioQuestion pregunta='En que año le interesa el viaje?'
                   radioProps={radio_props}
-                  buttonColor= {color ? 'red' : '#007AFF'}
+                  buttonColor={color ? 'red' : '#007AFF'}
                   onPress={(value)=>this.setState({value:value, color:false})}
                 />
 
                 <View style={styles.buttonContainer} >
                 <Button
-                         onPress={()=> valor ? navigate('SecondQuestionScreen') : this.setState({color:true})}
-                         title = 'SIGUIENTE'
+                         onPress={()=> this.state.value ? Alert.alert('DONE'): this.setState({color:true})}
+                         title = 'Terminar'
                          color='#007AFF'
                        />
 
@@ -64,4 +63,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default QuestionScreen;
+export default SecondQuestionScreen;

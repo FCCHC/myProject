@@ -46,15 +46,16 @@ class Survey extends Component{
 
   ValidateInfo(){
 
+    const {navigate} = this.props.navigation;
   name = this.state.nombre
   lastname = this.state.apellido
   fecha = this.state.date
   cel = this.state.telefono
   mail = this.state.correo
 
-  if(name && param && lastname && fecha && telefono && mail){
+  if(name && lastname && fecha && cel && mail){
 
-     navigate('QuestionScreen');
+navigate('QuestionScreen');
   }
 
   else {
@@ -74,7 +75,7 @@ class Survey extends Component{
 
 
 
-   const {navigate} = this.props.navigation;
+
 
    name = this.state.nombre
    lastname = this.state.apellido
@@ -152,7 +153,7 @@ class Survey extends Component{
      </View>
 
         <View style={{flexDirection:'row', marginTop:20}}>
-         <Text style={styles.question}>Genero</Text>
+         <Text style={styles.question}>Género</Text>
          <Picker selectedValue ={this.state.genero}
                  onValueChange={(itemValue, itemIndex) => this.setState({genero:itemValue})}
                  mode='dropdown'
@@ -165,7 +166,7 @@ class Survey extends Component{
          </View>
        <View style={styles.buttonContainer}>
        <Button
-                onPress={()=> navigate('QuestionScreen')}
+                onPress={this.ValidateInfo}
                 title = 'SIGUIENTE'
                 color='#007AFF'
               />
