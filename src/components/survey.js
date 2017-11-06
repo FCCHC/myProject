@@ -12,6 +12,7 @@ import {
   DatePickerAndroid,
   Image,
   AsyncStorage,
+  ToolbarAndroid,
 
 } from 'react-native';
 
@@ -25,11 +26,15 @@ import {StackNavigator} from 'react-navigation';
 
 import QuestionScreen from './questionScreen.js';
 
+//import {getSurvey} from 'src/Network/apiSurvey.js';
+
+
 class Survey extends Component{
 
   constructor(props){
     super(props);
      this.state = {
+     page:0,
      nombre: '',
      apellido: '',
      color: false,
@@ -37,6 +42,17 @@ class Survey extends Component{
      date:'',
      telefono:'',
      correo:'',
+     value:'',
+     data:[
+      {
+        question:'Te gusta viajar?',
+        choice:['Si','No']
+     },
+     {
+       question:'Te gusta viajar solo o acompanado',
+       choice:['solo','acompanado']
+     }
+   ],
 
   }
 
@@ -71,6 +87,10 @@ class Survey extends Component{
     title:'SURVEYAPP',
   };
 
+/*   componentDidMount(){
+     getSurvey.bind(this)();
+   }*/
+
   render() {
 
    name = this.state.nombre;
@@ -81,15 +101,26 @@ class Survey extends Component{
    color = this.state.color;
 
     return (
-
  <Image source={require('./borabora.jpg')}
         style={styles.backgroundImage}
         resizeMode={Image.resizeMode.strech}>
-
+     { console.log('running')}
       <View style={styles.container}>
 
-         {console.log('running')}
-        <View style={styles.containerQuestion}>
+
+{this.state.data.map((survey,i)=>(
+
+  <RadioQuestion pregunta={survey.question}
+                 buttonColor={color ? 'red' : '#007AFF'}
+                 onPress={(value)=>this.setState({value:value, color:false})}
+          />
+
+
+)
+)}
+
+
+        {/*<View style={styles.containerQuestion}>
           <Question pregunta= "Nombre"
                     styleText={styles.question}
                     placeholder='Nombre'
@@ -181,7 +212,7 @@ class Survey extends Component{
                 color='#007AFF'
               />
 
-        </View>
+        </View>*/}
     </View>
 </Image>
     );

@@ -10,13 +10,16 @@ class RadioQuestion extends Component {
 
 
   render(){
-
+    const radio_props = [
+      {label: 'Si', value: 1},
+      {label: 'No', value: 2}
+    ];
     return(
 <View style={styles.container}>
   <Text style={styles.question}>{this.props.pregunta}</Text>
     <View style={styles.radioContainer}>
       <RadioForm
-          radio_props={this.props.radioProps}
+          radio_props={radio_props}
           initial={-1}
           formHorizontal={false}
           labelHorizontal={true}

@@ -26,7 +26,7 @@ import RNFetchBlob from 'react-native-fetch-blob'
 
 var ImagePicker = require('react-native-image-picker');
 
-export default class App extends Component<{}> {
+class Api extends Component<{}> {
   constructor(props){
     super(props);
      this.state = {
@@ -188,3 +188,5 @@ const styles = StyleSheet.create({
     backgroundColor:'blue'
   }
 });
+
+export default Api;
