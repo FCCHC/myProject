@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import {Text,TextInput,View,  StyleSheet,Button,Alert} from 'react-native';
+import {Text,TextInput,View,  StyleSheet,Button,Alert,Image} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 
 import RadioQuestion from './radioQuestion.js';
@@ -26,23 +26,25 @@ import RadioQuestion from './radioQuestion.js';
           {label: '2018', value: 2}
         ];
     return (
+      <Image source={require('./playa.jpg')}
+             style={styles.backgroundImage}
+             resizeMode={Image.resizeMode.strech}>
+        <View style={styles.container}>
+          <RadioQuestion pregunta='En que año le interesa el viaje?'
+                         radioProps={radio_props}
+                         buttonColor={color ? 'red' : '#007AFF'}
+                         onPress={(value)=>this.setState({value:value, color:false})}
+                  />
 
-      <View style={styles.container}>
-  <RadioQuestion pregunta='En que año le interesa el viaje?'
-                  radioProps={radio_props}
-                  buttonColor={color ? 'red' : '#007AFF'}
-                  onPress={(value)=>this.setState({value:value, color:false})}
-                />
-
-                <View style={styles.buttonContainer} >
+          <View style={styles.buttonContainer} >
                 <Button
-                         onPress={()=> this.state.value ? Alert.alert('DONE'): this.setState({color:true})}
-                         title = 'Terminar'
-                         color='#007AFF'
+                        onPress={()=> this.state.value ? Alert.alert('DONE'): this.setState({color:true})}
+                        title = 'Terminar'
+                        color='#007AFF'
                        />
-
-                 </View>
-      </View>
+          </View>
+        </View>
+      </Image>
     )
   }
 }
@@ -59,6 +61,11 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     marginTop:50,
+  },
+  backgroundImage:{
+    flex:1,
+    width:null,
+    height:null,
   },
 })
 

@@ -11,6 +11,7 @@ import {
   ViewPagerAndroid,
   DatePickerAndroid,
   Image,
+  AsyncStorage,
 
 } from 'react-native';
 
@@ -47,42 +48,38 @@ class Survey extends Component{
   ValidateInfo(){
 
     const {navigate} = this.props.navigation;
-  name = this.state.nombre
-  lastname = this.state.apellido
-  fecha = this.state.date
-  cel = this.state.telefono
-  mail = this.state.correo
+    name = this.state.nombre
+    lastname = this.state.apellido
+    fecha = this.state.date
+    cel = this.state.telefono
+    mail = this.state.correo
 
-  if(name && lastname && fecha && cel && mail){
+    if(name && lastname && fecha && cel && mail){
 
-navigate('QuestionScreen');
-  }
+      navigate('QuestionScreen');
+    }
 
-  else {
-  this.setState({
+    else {
+      this.setState({
 
-    color : true
-  })
-  }
+        color : true
+      })
+    }
   }
 
   static navigationOptions={
-    title:'welcome',
+    title:'SURVEYAPP',
   };
-
 
   render() {
 
+   name = this.state.nombre;
+   lastname = this.state.apellido;
+   fecha = this.state.date;
+   cel = this.state.telefono;
+   mail = this.state.correo;
+   color = this.state.color;
 
-
-
-
-   name = this.state.nombre
-   lastname = this.state.apellido
-   fecha = this.state.date
-   cel = this.state.telefono
-   mail = this.state.correo
-   color = this.state.color
     return (
 
  <Image source={require('./borabora.jpg')}
@@ -93,50 +90,62 @@ navigate('QuestionScreen');
 
          {console.log('running')}
         <View style={styles.containerQuestion}>
-
           <Question pregunta= "Nombre"
                     styleText={styles.question}
                     placeholder='Nombre'
-                    onChange = {(text) => this.setState({nombre:text,color:false})}
+                    value={this.state.nombre}
+                    keyboard='default'
+                    maxLength = {40}
+                    onChange = {(text)=> this.setState({nombre:text,color:false,})}
                     condition = {color && name === '' ? 'red': 'transparent'}/>
             </View>
-            <View style={styles.containerQuestion}>
-          <Question pregunta = "Apellido "
-                    styleText={styles.question}
-                    placeholder='Apellido'
-                    onChange = {(text) => this.setState({apellido :text, color:false})}
-                    condition = {color && lastname === '' ? 'red' : 'transparent'} />
-          </View>
+        <View style={styles.containerQuestion}>
 
-          <View style={styles.containerQuestion}>
-        <Question pregunta = "Celular "
-                  styleText={styles.question}
-                  placeholder='000000000'
-                  onChange = {(text) => this.setState({telefono :text, color:false})}
-                  condition = {color && cel === '' ? 'red' : 'transparent'} />
+           <Question pregunta = "Apellido "
+                     styleText={styles.question}
+                     value={this.state.apellido}
+                     keyboard='default'
+                     placeholder='Apellido'
+                     maxLength={40}
+                     onChange = {(text) => this.setState({apellido :text, color:false})}
+                     condition = {color && lastname === '' ? 'red' : 'transparent'} />
         </View>
 
         <View style={styles.containerQuestion}>
-      <Question pregunta = "Correo "
-                styleText={styles.question}
-                placeholder='example@tucorreo.com'
-                onChange = {(text) => this.setState({correo :text, color:false})}
-                condition = {color && mail === '' ? 'red' : 'transparent'} />
-      </View>
+         <Question pregunta = "Celular "
+                   maxLength={10}
+                   value={this.state.telefono}
+                   styleText={styles.question}
+                   keyboard='numeric'
+                   placeholder='000000000'
+                   onChange = {(text) => this.setState({telefono :text, color:false})}
+                   condition = {color && cel === '' ? 'red' : 'transparent'} />
+        </View>
+
+        <View style={styles.containerQuestion}>
+         <Question pregunta = "Correo "
+                   styleText={styles.question}
+                   value={this.state.correo}
+                   maxLength={250}
+                   keyboard='email-address'
+                   placeholder='example@tucorreo.com'
+                   onChange = {(text) => this.setState({correo :text, color:false})}
+                   condition = {color && mail === '' ? 'red' : 'transparent'} />
+        </View>
 
 
-  <View style={{flexDirection:'row',marginTop:40}}>
-          <Text style={styles.question}>Fecha Nacimiento</Text>
-          <DatePicker style={{width:160,marginLeft:40}}
-                      date={this.state.date}
-                      mode='date'
-                      placeholder="Select date"
-                      format="YYYY-MM-DD"
-                      confirmBtnText='Confirm'
-                      cancelBtnText="Cancel"
-                      androidMode='spinner'
-                      onDateChange={(date)=> {this.setState({date:date})}}
-                      customStyles= {color && fecha === '' ? {dateInput: {borderColor:'red', marginLeft:0}, dateIcon:{position:'absolute',left:0,top:4,marginLeft:0}} : {dateIcon: {
+        <View style={{flexDirection:'row',marginTop:40}}>
+           <Text style={styles.question}>Fecha Nacimiento</Text>
+           <DatePicker style={{width:160,marginLeft:40}}
+                       date={this.state.date}
+                       mode='date'
+                       placeholder="Select date"
+                       format="YYYY-MM-DD"
+                       confirmBtnText='Confirm'
+                       cancelBtnText="Cancel"
+                       androidMode='spinner'
+                       onDateChange={(date)=> {this.setState({date:date})}}
+                       customStyles= {color && fecha === '' ? {dateInput: {borderColor:'red', marginLeft:0}, dateIcon:{position:'absolute',left:0,top:4,marginLeft:0}} : {dateIcon: {
                                      position: 'absolute',
                                      left: 0,
                                      top: 4,
@@ -150,22 +159,23 @@ navigate('QuestionScreen');
                                />
 
 
-     </View>
+          </View>
 
-        <View style={{flexDirection:'row', marginTop:20}}>
-         <Text style={styles.question}>Género</Text>
-         <Picker selectedValue ={this.state.genero}
-                 onValueChange={(itemValue, itemIndex) => this.setState({genero:itemValue})}
-                 mode='dropdown'
-                 style={{width:170,marginLeft:110}}
-               >
+          <View style={{flexDirection:'row', marginTop:20}}>
+           <Text style={styles.question}>Género</Text>
+             <Picker selectedValue ={this.state.genero}
+                     onValueChange={(itemValue, itemIndex) => this.setState({genero:itemValue})}
+                     mode='dropdown'
+                     style={{width:170,marginLeft:110}}
+                   >
 
                 <Picker.Item label='Femenino' value="femenino"/>
                 <Picker.Item label='Masculino' value = 'masculino'/>
-         </Picker>
+             </Picker>
          </View>
-       <View style={styles.buttonContainer}>
-       <Button
+
+         <View style={styles.buttonContainer}>
+           <Button
                 onPress={this.ValidateInfo}
                 title = 'SIGUIENTE'
                 color='#007AFF'

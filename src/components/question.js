@@ -11,9 +11,11 @@ render(){
     <Text style={this.props.styleText}>{this.props.pregunta}</Text>
 
     <TextInput style={styles.textInput}
-               maxLength = {40}
+               value={this.props.value}
+               maxLength = {this.props.maxLength}
                placeholder ={this.props.placeholder}
                onChangeText={this.props.onChange}
+               keyboardType={this.props.keyboard}
                underlineColorAndroid={this.props.condition}/>
 
 </View>

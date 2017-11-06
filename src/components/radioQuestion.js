@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
      },
      question: {
        fontSize: 40,
-       color: 'black',
+       color: 'white',
        marginLeft:30,
        marginTop:10,
        marginBottom:0,
