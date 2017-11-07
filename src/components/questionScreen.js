@@ -11,7 +11,8 @@ import RadioQuestion from './radioQuestion.js';
      this.state ={
        value:0,
        color:false,
-     }
+      
+          }
    }
 
    static navigationOptions={

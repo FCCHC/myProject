@@ -13,6 +13,8 @@ import {
   Image,
   AsyncStorage,
   ToolbarAndroid,
+  ScrollView,
+  TouchableHighlight,
 
 } from 'react-native';
 
@@ -46,12 +48,21 @@ class Survey extends Component{
      data:[
       {
         question:'Te gusta viajar?',
-        choice:['Si','No']
+        choice:['Si','no']
      },
      {
        question:'Te gusta viajar solo o acompanado',
-       choice:['solo','acompanado']
-     }
+       choice:['solo','acompañado']
+     },
+     {
+       question:'Viajarias este año',
+       choice:['si','no']
+     },
+     {
+       question:'Viajarías por una semana?',
+       choice:['si','no']
+     },
+
    ],
 
   }
@@ -87,9 +98,6 @@ class Survey extends Component{
     title:'SURVEYAPP',
   };
 
-/*   componentDidMount(){
-     getSurvey.bind(this)();
-   }*/
 
   render() {
 
@@ -99,28 +107,29 @@ class Survey extends Component{
    cel = this.state.telefono;
    mail = this.state.correo;
    color = this.state.color;
-
+   datos= this.state.data
     return (
+
  <Image source={require('./borabora.jpg')}
         style={styles.backgroundImage}
         resizeMode={Image.resizeMode.strech}>
      { console.log('running')}
       <View style={styles.container}>
-
-
-{this.state.data.map((survey,i)=>(
-
-  <RadioQuestion pregunta={survey.question}
-                 buttonColor={color ? 'red' : '#007AFF'}
-                 onPress={(value)=>this.setState({value:value, color:false})}
-          />
-
-
-)
-)}
-
-
-        {/*<View style={styles.containerQuestion}>
+          <ScrollView >
+            {this.state.data.map((survey,i)=>(
+              <View style={styles.container} key={i}>
+              <Text style={styles.question} >{survey.question}</Text>
+                  {survey.choice.map((choice,i)=>(
+                    <TouchableHighlight underlayColor='white' key={i}>
+                      <View style={styles.button}>
+                        <Text style={styles.buttonText} >{choice}</Text>
+                      </View>
+                    </TouchableHighlight>
+                  ))}
+              </View>
+            ))}
+    </ScrollView>
+    {/*    <View style={styles.containerQuestion}>
           <Question pregunta= "Nombre"
                     styleText={styles.question}
                     placeholder='Nombre'
@@ -224,7 +233,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     flex: 1,
-    marginTop:50,
+    alignItems:'center',
+    //marginTop:50,
   },
   backgroundImage:{
     flex:1,
@@ -232,8 +242,9 @@ const styles = StyleSheet.create({
     height:null,
   },
   question: {
-    fontSize: 15,
+    fontSize: 20,
     color: 'black',
+    justifyContent:'center',
     marginLeft:30,
     marginTop:10,
     marginBottom:0,
@@ -256,7 +267,7 @@ const styles = StyleSheet.create({
     marginLeft:110,
     flexDirection: 'column',
     justifyContent:'center',
-    width:200,
+    width:100,
     height:40,
   },
   buttonText: {
@@ -286,6 +297,12 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     width:400,
     marginTop:10,
+  },
+  button:{
+    marginBottom: 30,
+    width: 260,
+    alignItems: 'center',
+    backgroundColor: '#2196F3',
   },
 });
 
