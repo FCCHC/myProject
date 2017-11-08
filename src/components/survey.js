@@ -15,7 +15,8 @@ import {
   ToolbarAndroid,
   ScrollView,
   TouchableHighlight,
-
+  FlatList,
+  ActivityIndicator,
 } from 'react-native';
 
 import Question from './question.js';
@@ -45,25 +46,9 @@ class Survey extends Component{
      telefono:'',
      correo:'',
      value:'',
-     data:[
-      {
-        question:'Te gusta viajar?',
-        choice:['Si','no']
-     },
-     {
-       question:'Te gusta viajar solo o acompanado',
-       choice:['solo','acompañado']
-     },
-     {
-       question:'Viajarias este año',
-       choice:['si','no']
-     },
-     {
-       question:'Viajarías por una semana?',
-       choice:['si','no']
-     },
+     isLoading:true,
+     data:[],
 
-   ],
 
   }
 
@@ -98,47 +83,53 @@ class Survey extends Component{
     title:'SURVEYAPP',
   };
 
+  componentDidMount(){
+      return fetch('http://192.168.1.40:8000/Surveys/')
+         .then((response)=>  response.json())
+         .then((responseJson)=>{
+           responseJson.map(item => (
+              this.setState({
+                    isLoading:false,
+                    data: this.state.data.concat([item.question])
+              })
+           )
+         )
+         })
+         .catch((error)=>{
+           console.warn(error);
+         })
+  }
+
+  static navigationOptions={
+    title:'QUESTION'
+  }
+
 
   render() {
 
-   name = this.state.nombre;
-   lastname = this.state.apellido;
-   fecha = this.state.date;
-   cel = this.state.telefono;
-   mail = this.state.correo;
-   color = this.state.color;
-   datos= this.state.data
-    return (
+   if(this.state.isLoading){
+     return(
+       <View style={{flex:1, paddingTop: 20}}>
+         <ActivityIndicator/>
+       </View>
+     );
+   }
 
- <Image source={require('./borabora.jpg')}
-        style={styles.backgroundImage}
-        resizeMode={Image.resizeMode.strech}>
-     { console.log('running')}
+    return (
       <View style={styles.container}>
-          <ScrollView >
-            {this.state.data.map((survey,i)=>(
-              <View style={styles.container} key={i}>
-              <Text style={styles.question} >{survey.question}</Text>
-                  {survey.choice.map((choice,i)=>(
-                    <TouchableHighlight underlayColor='white' key={i}>
-                      <View style={styles.button}>
-                        <Text style={styles.buttonText} >{choice}</Text>
-                      </View>
-                    </TouchableHighlight>
-                  ))}
+        {console.log('running')}
+        <Text>{this.state.data}</Text>
+
+        {/*<View style={styles.containerQuestion}>
+            <Question pregunta= "Nombre"
+                      styleText={styles.question}
+                      placeholder='Nombre'
+                      value={this.state.nombre}
+                      keyboard='default'
+                      maxLength = {40}
+                      onChange = {(text)=> this.setState({nombre:text,color:false,})}
+                      condition = {color && name === '' ? 'red': 'transparent'}/>
               </View>
-            ))}
-    </ScrollView>
-    {/*    <View style={styles.containerQuestion}>
-          <Question pregunta= "Nombre"
-                    styleText={styles.question}
-                    placeholder='Nombre'
-                    value={this.state.nombre}
-                    keyboard='default'
-                    maxLength = {40}
-                    onChange = {(text)=> this.setState({nombre:text,color:false,})}
-                    condition = {color && name === '' ? 'red': 'transparent'}/>
-            </View>
         <View style={styles.containerQuestion}>
 
            <Question pregunta = "Apellido "
@@ -152,25 +143,25 @@ class Survey extends Component{
         </View>
 
         <View style={styles.containerQuestion}>
-         <Question pregunta = "Celular "
-                   maxLength={10}
-                   value={this.state.telefono}
-                   styleText={styles.question}
-                   keyboard='numeric'
-                   placeholder='000000000'
-                   onChange = {(text) => this.setState({telefono :text, color:false})}
-                   condition = {color && cel === '' ? 'red' : 'transparent'} />
+           <Question pregunta = "Celular "
+                     maxLength={10}
+                     value={this.state.telefono}
+                     styleText={styles.question}
+                     keyboard='numeric'
+                     placeholder='000000000'
+                     onChange = {(text) => this.setState({telefono :text, color:false})}
+                     condition = {color && cel === '' ? 'red' : 'transparent'} />
         </View>
 
         <View style={styles.containerQuestion}>
-         <Question pregunta = "Correo "
-                   styleText={styles.question}
-                   value={this.state.correo}
-                   maxLength={250}
-                   keyboard='email-address'
-                   placeholder='example@tucorreo.com'
-                   onChange = {(text) => this.setState({correo :text, color:false})}
-                   condition = {color && mail === '' ? 'red' : 'transparent'} />
+           <Question pregunta = "Correo "
+                     styleText={styles.question}
+                     value={this.state.correo}
+                     maxLength={250}
+                     keyboard='email-address'
+                     placeholder='example@tucorreo.com'
+                     onChange = {(text) => this.setState({correo :text, color:false})}
+                     condition = {color && mail === '' ? 'red' : 'transparent'} />
         </View>
 
 
@@ -208,7 +199,6 @@ class Survey extends Component{
                      mode='dropdown'
                      style={{width:170,marginLeft:110}}
                    >
-
                 <Picker.Item label='Femenino' value="femenino"/>
                 <Picker.Item label='Masculino' value = 'masculino'/>
              </Picker>
@@ -220,10 +210,9 @@ class Survey extends Component{
                 title = 'SIGUIENTE'
                 color='#007AFF'
               />
-
         </View>*/}
     </View>
-</Image>
+
     );
   }
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import {Text,TextInput,View,  StyleSheet,Button, Image} from 'react-native';
+import {Text,TextInput,View,  StyleSheet,Button, Image,  TouchableHighlight,ScrollView} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 
 import RadioQuestion from './radioQuestion.js';
@@ -11,20 +11,32 @@ import RadioQuestion from './radioQuestion.js';
      this.state ={
        value:0,
        color:false,
-      
+       data:[
+        {
+          question:'Te gusta viajar?',
+          choice:['Si','no']
+       },
+       {
+         question:'Te gusta viajar solo o acompanado',
+         choice:['solo','acompañado']
+       },
+       {
+         question:'Viajarias este año',
+         choice:['si','no']
+       },
+       {
+         question:'Viajarías por una semana?',
+         choice:['si','no']
+       },
+
+     ],
           }
    }
 
-   static navigationOptions={
-     title:'QUESTION'
-   }
+
+
   render(){
         const {navigate} = this.props.navigation;
-
-        const radio_props = [
-          {label: 'Si', value: 1},
-          {label: 'No', value: 2}
-        ];
 
         const valor = this.state.value;
         const color = this.state.color;
@@ -33,19 +45,28 @@ import RadioQuestion from './radioQuestion.js';
              style={styles.backgroundImage}
              resizeMode={Image.resizeMode.strech}>
       <View style={styles.container}>
-         <RadioQuestion pregunta='Te gusta viajar?'
-                        radioProps={radio_props}
-                        buttonColor= {color ? 'red' : '#007AFF'}
-                        onPress={(value)=>this.setState({value:value, color:false})}
-                />
+           <ScrollView>
+          {this.state.data.map((survey,i)=>(
+            <View style={styles.container} key={i}>
+            <Text style={styles.question} >{survey.question}</Text>
+                {survey.choice.map((choice,i)=>(
+                  <TouchableHighlight underlayColor='white' key={i}>
+                    <View style={styles.button}>
+                      <Text style={styles.buttonText} >{choice}</Text>
+                    </View>
+                  </TouchableHighlight>
+                ))}
+                <View style={styles.buttonContainer} >
+                     <Button
+                             //onPress={ }
+                             title = 'SIGUIENTE'
+                             color='#007AFF'
+                           />
+                </View>
+            </View>
+          ))}
+          </ScrollView>
 
-           <View style={styles.buttonContainer} >
-                <Button
-                        onPress={()=> valor ? navigate('SecondQuestionScreen') : this.setState({color:true})}
-                        title = 'SIGUIENTE'
-                        color='#007AFF'
-                      />
-           </View>
       </View>
     </Image>
     )
@@ -54,9 +75,8 @@ import RadioQuestion from './radioQuestion.js';
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    marginLeft:110,
+    alignItems:'center',
     flexDirection: 'column',
-    justifyContent:'center',
     width:200,
     height:40,
   },
@@ -64,12 +84,29 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     marginTop:50,
+    alignItems:'center'
   },
   backgroundImage:{
     flex:1,
     width:null,
     height:null,
   },
+  button:{
+    marginBottom: 30,
+    width: 260,
+    alignItems: 'center',
+    backgroundColor: '#2196F3',
+  },
+  question: {
+    fontSize: 20,
+    color: 'white',
+    justifyContent:'center',
+    marginLeft:30,
+    marginTop:10,
+    marginBottom:0,
+    fontWeight:'bold',
+  },
+
 })
 
 

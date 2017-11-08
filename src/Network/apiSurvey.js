@@ -1,4 +1,4 @@
-var url=''
+var url='http://192.168.1.40:8000/Surveys/'
 
 export.getSurvey(){
   fetch(url)
