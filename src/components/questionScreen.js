@@ -11,64 +11,60 @@ import RadioQuestion from './radioQuestion.js';
      this.state ={
        value:0,
        color:false,
-       data:[
-        {
-          question:'Te gusta viajar?',
-          choice:['Si','no']
-       },
-       {
-         question:'Te gusta viajar solo o acompanado',
-         choice:['solo','acompañado']
-       },
-       {
-         question:'Viajarias este año',
-         choice:['si','no']
-       },
-       {
-         question:'Viajarías por una semana?',
-         choice:['si','no']
-       },
+       data:[],
 
-     ],
           }
    }
 
-
+   componentDidMount(){
+     console.log('Network request');
+       return fetch('http://192.168.1.182:8000/Surveys')
+          .then((response)=>  response.json())
+          .then((responseJson)=>{
+            console.log(responseJson)
+            responseJson.map(item => (
+              this.setState({
+                    data: this.state.data.concat([item.question])
+              })
+            )
+          )
+          })
+          .catch((error)=>{
+            console.warn(error);
+          })
+   }
 
   render(){
         const {navigate} = this.props.navigation;
 
-        const valor = this.state.value;
-        const color = this.state.color;
+
     return (
-      <Image source={require('./playa.jpg')}
-             style={styles.backgroundImage}
-             resizeMode={Image.resizeMode.strech}>
       <View style={styles.container}>
            <ScrollView>
+             {console.log(this.state.data)}
           {this.state.data.map((survey,i)=>(
             <View style={styles.container} key={i}>
-            <Text style={styles.question} >{survey.question}</Text>
-                {survey.choice.map((choice,i)=>(
+            <Text style={styles.question} >{survey}</Text>
+                {/*{survey.choice.map((choice,i)=>(
                   <TouchableHighlight underlayColor='white' key={i}>
                     <View style={styles.button}>
-                      <Text style={styles.buttonText} >{choice}</Text>
+                      <Text style={styles.buttonText} >hola</Text>
                     </View>
                   </TouchableHighlight>
-                ))}
-                <View style={styles.buttonContainer} >
+                ))}*/}
+              {/*  <View style={styles.buttonContainer} >
                      <Button
                              //onPress={ }
                              title = 'SIGUIENTE'
                              color='#007AFF'
                            />
-                </View>
+                </View>*/}
             </View>
           ))}
           </ScrollView>
 
       </View>
-    </Image>
+
     )
   }
 }
@@ -83,7 +79,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     flex: 1,
-    marginTop:50,
     alignItems:'center'
   },
   backgroundImage:{
@@ -99,9 +94,8 @@ const styles = StyleSheet.create({
   },
   question: {
     fontSize: 20,
-    color: 'white',
+    color: 'black',
     justifyContent:'center',
-    marginLeft:30,
     marginTop:10,
     marginBottom:0,
     fontWeight:'bold',

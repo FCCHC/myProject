@@ -15,8 +15,6 @@ import {
   ToolbarAndroid,
   ScrollView,
   TouchableHighlight,
-  FlatList,
-  ActivityIndicator,
 } from 'react-native';
 
 import Question from './question.js';
@@ -46,9 +44,6 @@ class Survey extends Component{
      telefono:'',
      correo:'',
      value:'',
-     isLoading:true,
-     data:[],
-
 
   }
 
@@ -83,22 +78,6 @@ class Survey extends Component{
     title:'SURVEYAPP',
   };
 
-  componentDidMount(){
-      return fetch('http://192.168.1.40:8000/Surveys/')
-         .then((response)=>  response.json())
-         .then((responseJson)=>{
-           responseJson.map(item => (
-              this.setState({
-                    isLoading:false,
-                    data: this.state.data.concat([item.question])
-              })
-           )
-         )
-         })
-         .catch((error)=>{
-           console.warn(error);
-         })
-  }
 
   static navigationOptions={
     title:'QUESTION'
@@ -107,20 +86,17 @@ class Survey extends Component{
 
   render() {
 
-   if(this.state.isLoading){
-     return(
-       <View style={{flex:1, paddingTop: 20}}>
-         <ActivityIndicator/>
-       </View>
-     );
-   }
-
+    const nombre = this.state.nombre
+     const color = this.state.color
+     const fecha = this.state.date
+     const mail = this.state.correo
+     const cel = this.state.telefono
+     const lastname = this.state.apellido
+     
     return (
       <View style={styles.container}>
         {console.log('running')}
-        <Text>{this.state.data}</Text>
-
-        {/*<View style={styles.containerQuestion}>
+        <View style={styles.containerQuestion}>
             <Question pregunta= "Nombre"
                       styleText={styles.question}
                       placeholder='Nombre'
@@ -210,7 +186,7 @@ class Survey extends Component{
                 title = 'SIGUIENTE'
                 color='#007AFF'
               />
-        </View>*/}
+        </View>
     </View>
 
     );
