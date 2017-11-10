@@ -49,21 +49,16 @@ import RadioQuestion from './radioQuestion.js';
             return(
               <View style={styles.container} key={i}>
               <Text style={styles.question} >{survey.question}</Text>
-              <Text style={styles.question}>{survey.survey_name}</Text>
-                  {/*{survey.choice.map((choice,i)=>(
-                    <TouchableHighlight underlayColor='white' key={i}>
-                      <View style={styles.button}>
-                        <Text style={styles.buttonText} >hola</Text>
-                      </View>
-                    </TouchableHighlight>
-                  ))}*/}
-                {/*  <View style={styles.buttonContainer} >
-                       <Button
-                               //onPress={ }
-                               title = 'SIGUIENTE'
-                               color='#007AFF'
-                             />
-                  </View>*/}
+                  {survey.choices.map((ch,c)=>{
+                    return(
+                      <TouchableHighlight underlayColor='white' key={c}>
+                        <View style={styles.button}>
+                          <Text style={styles.buttonText} >{ch.choice}</Text>
+                        </View>
+                      </TouchableHighlight>
+                    )
+
+                  })}
               </View>
             )
           }
