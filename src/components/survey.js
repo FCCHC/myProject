@@ -80,7 +80,7 @@ class Survey extends Component{
 
 
   static navigationOptions={
-    title:'QUESTION'
+    title:'SURVEY'
   }
 
 
@@ -92,7 +92,7 @@ class Survey extends Component{
      const mail = this.state.correo
      const cel = this.state.telefono
      const lastname = this.state.apellido
-     
+
     return (
       <View style={styles.container}>
         {console.log('running')}
@@ -229,7 +229,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   buttonContainer: {
-    marginLeft:110,
     flexDirection: 'column',
     justifyContent:'center',
     width:100,

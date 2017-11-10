@@ -11,23 +11,26 @@ import RadioQuestion from './radioQuestion.js';
      this.state ={
        value:0,
        color:false,
-       data:[],
+       data:[
 
+       ],
           }
    }
 
    componentDidMount(){
      console.log('Network request');
        return fetch('http://192.168.1.182:8000/Surveys')
-          .then((response)=>  response.json())
+          .then((response)=> {
+            return response.json()
+          })
           .then((responseJson)=>{
-            console.log(responseJson)
-            responseJson.map(item => (
-              this.setState({
-                    data: this.state.data.concat([item.question])
-              })
-            )
-          )
+            newData=[]
+            responseJson.map((item,i)=>{
+              newData.push(item)
+            })
+            this.setState({
+              data:newData
+            })
           })
           .catch((error)=>{
             console.warn(error);
@@ -37,30 +40,34 @@ import RadioQuestion from './radioQuestion.js';
   render(){
         const {navigate} = this.props.navigation;
 
-
+    console.log(this.state,'<--------')
     return (
+
       <View style={styles.container}>
            <ScrollView>
-             {console.log(this.state.data)}
-          {this.state.data.map((survey,i)=>(
-            <View style={styles.container} key={i}>
-            <Text style={styles.question} >{survey}</Text>
-                {/*{survey.choice.map((choice,i)=>(
-                  <TouchableHighlight underlayColor='white' key={i}>
-                    <View style={styles.button}>
-                      <Text style={styles.buttonText} >hola</Text>
-                    </View>
-                  </TouchableHighlight>
-                ))}*/}
-              {/*  <View style={styles.buttonContainer} >
-                     <Button
-                             //onPress={ }
-                             title = 'SIGUIENTE'
-                             color='#007AFF'
-                           />
-                </View>*/}
-            </View>
-          ))}
+          {this.state.data.map((survey,i)=> {
+            return(
+              <View style={styles.container} key={i}>
+              <Text style={styles.question} >{survey.question}</Text>
+              <Text style={styles.question}>{survey.survey_name}</Text>
+                  {/*{survey.choice.map((choice,i)=>(
+                    <TouchableHighlight underlayColor='white' key={i}>
+                      <View style={styles.button}>
+                        <Text style={styles.buttonText} >hola</Text>
+                      </View>
+                    </TouchableHighlight>
+                  ))}*/}
+                {/*  <View style={styles.buttonContainer} >
+                       <Button
+                               //onPress={ }
+                               title = 'SIGUIENTE'
+                               color='#007AFF'
+                             />
+                  </View>*/}
+              </View>
+            )
+          }
+          )}
           </ScrollView>
 
       </View>
