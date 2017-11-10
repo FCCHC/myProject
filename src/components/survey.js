@@ -7,7 +7,6 @@ import {
   TextInput,
   Button,
   Alert,
-  Picker,
   ViewPagerAndroid,
   DatePickerAndroid,
   Image,
@@ -26,6 +25,8 @@ import DatePicker from 'react-native-datepicker';
 import {StackNavigator} from 'react-navigation';
 
 import QuestionScreen from './questionScreen.js';
+
+import GenderPicker from './genderPicker.js';
 
 //import {getSurvey} from 'src/Network/apiSurvey.js';
 
@@ -168,17 +169,11 @@ class Survey extends Component{
 
           </View>
 
-          <View style={{flexDirection:'row', marginTop:20}}>
-           <Text style={styles.question}>Género</Text>
-             <Picker selectedValue ={this.state.genero}
-                     onValueChange={(itemValue, itemIndex) => this.setState({genero:itemValue})}
-                     mode='dropdown'
-                     style={{width:170,marginLeft:110}}
-                   >
-                <Picker.Item label='Femenino' value="femenino"/>
-                <Picker.Item label='Masculino' value = 'masculino'/>
-             </Picker>
-         </View>
+          <View>
+            <GenderPicker genero={this.state.genero}
+                          onChange={(itemValue, itemIndex) => this.setState({genero:itemValue})}
+                        />
+          </View>
 
          <View style={styles.buttonContainer}>
            <Button
