@@ -36,13 +36,13 @@ class Survey extends Component{
     super(props);
      this.state = {
      page:0,
-     nombre: '',
-     apellido: '',
+     nombre: 'FerC',
+     apellido: 'CC',
      color: false,
      genero: '',
-     date:'',
-     telefono:'',
-     correo:'',
+     date:'2017/11/10',
+     telefono:'000000',
+     correo:'correo@hotmail.com',
      value:'',
 
   }
