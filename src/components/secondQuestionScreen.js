@@ -26,9 +26,7 @@ import RadioQuestion from './radioQuestion.js';
           {label: '2018', value: 2}
         ];
     return (
-      <Image source={require('./playa.jpg')}
-             style={styles.backgroundImage}
-             resizeMode={Image.resizeMode.strech}>
+
         <View style={styles.container}>
           <RadioQuestion pregunta='En que año le interesa el viaje?'
                          radioProps={radio_props}
@@ -44,7 +42,7 @@ import RadioQuestion from './radioQuestion.js';
                        />
           </View>
         </View>
-      </Image>
+
     )
   }
 }
