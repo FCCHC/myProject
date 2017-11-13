@@ -28,8 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new RNFetchBlobPackage(),
             new ImagePickerPackage(),
-            new SQLitePluginPackage(),
-
+            new SQLitePluginPackage()
       );
     }
 

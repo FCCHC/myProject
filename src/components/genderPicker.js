@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Text,TextInput,View,  StyleSheet, Picker,  StyleSheet,} from 'react-native';
+import {Text,TextInput,View,  StyleSheet, Picker,} from 'react-native';
 
 class GenderPicker extends Component{
   render(){

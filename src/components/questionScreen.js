@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     width: 260,
     alignItems: 'center',
-    backgroundColor: '#2196F3',
+    backgroundColor: 'gray',
   },
   question: {
     fontSize: 20,
