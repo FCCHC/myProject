@@ -7,6 +7,8 @@ import RadioQuestion from './radioQuestion.js';
 
 import SQLite from 'react-native-sqlite-storage';
 
+const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyDB', location:'Library'}, this.openCB,this.errorCB);
+
  class QuestionScreen extends Component {
    constructor(props){
      super(props);
@@ -55,49 +57,56 @@ import SQLite from 'react-native-sqlite-storage';
 
   //  addQuestionDB(question){
    //
-  //    const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyDB', location:'Library'}, this.openCB,this.errorCB);
   //       console.log('addquestionDB');
-  //       console.log(question);
-  //       console.log(db);
-  //      db.transaction((tx)=>{
-  //       var query = "INSERT INTO questions (question) VALUES (?)";
+  //       const questionData = this.state.data
    //
-  //      tx.executeSql(query, [question],function(tx,result){
-  //           console.log('insertId' + result.insertId);
-  //         console.log('rowsAffected' + result.rowsAffected);
-  //      },
-  //      function(tx,error){
-  //       console.log('INSERT error: ' + error.message);
-  //      });
-  //    }, function(error){
-  //       console.log('transaction error: '+ error.message);
-  //     },function(){
-  //        console.log('transaction ok');
-  //    });
+  //       questionData.map((quest,q)=>{
+   //
+  //         db.transaction((tx)=>{
+  //          var query = "INSERT INTO questions (id,question) VALUES (?,?)";
+   //
+  //         tx.executeSql(query, [quest.id_question,quest.question],function(tx,result){
+  //            console.log('rowsAffected' + result.rowsAffected);
+  //         },
+  //         function(tx,error){
+  //          console.log('INSERT error: ' + error.message);
+  //         });
+  //       }, function(error){
+  //          console.log('transaction error: '+ error.message);
+  //        },function(){
+  //           console.log('transaction ok');
+  //       });
+  //       })
+   //
   //  }
 
-      addChoiceDB(choice,question){
-        const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyDB', location:'Library'}, this.openCB,this.errorCB);
-
-        db.transaction(function (tx){
-          var query = "INSERT INTO choices (choice) VALUES (?,(SELECT id FROM questions WHERE question = ))";
-
-          tx.executeSql(query,[],function(tx,result){
-              console.log('insertId: '+result.insertId);
-              console.log('rowsAffected: '+result.rowsAffected);
-          },
-            function(tx,error){
-              console.log('INSERT error: ' + error.message);
-          });
-        }, function(error){
-          console.log('transaction error: '+ error.messaage);
-        },function(){
-          console.log('transaction ok');
-        });
-      }
+      // addChoiceDB(){
+      //   const datos = this.state.data
+      //   datos.map((item,i)=>{
+      //     console.log(item.id_question);
+      //     const ch = item.choices
+      //     ch.map((option,o)=>{
+      //
+      //     db.transaction(function (tx){
+      //       console.log(option.choice,'option.choice',item.id_question,'item.id_question');
+      //       var query ='INSERT INTO choices(choice,question) VALUES (?,?)'
+      //
+      //       tx.executeSql(query,[option.choice,item.id_question],function(tx,result){
+      //           console.log('rowsAffected: '+result.rowsAffected);
+      //       },
+      //         function(tx,error){
+      //           console.log('INSERT error: ' + error.message);
+      //       });
+      //     }, function(error){
+      //       console.log('transaction error: '+ error.messaage);
+      //     },function(){
+      //       console.log('transaction ok');
+      //     });
+      //     })
+      //   })
+      // }
 
   // deleteDB(){
-  //   const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyDB', location:'Library'}, this.openCB,this.errorCB);
   //   db.transaction(function (tx){
   //     var query = "DELETE FROM questions";
   //
@@ -114,27 +123,25 @@ import SQLite from 'react-native-sqlite-storage';
   //   });
   // }
 
-  //  getData(){
-  //     const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyDB', location:'Library'}, this.openCB,this.errorCB);
-  //
-  //    db.transaction(function(tx){
-  //    var query = "SELECT question FROM questions";
-  //
-  //    tx.executeSql(query,[], function(tx,resultSet){
-  //           for (var i = 0; i < resultSet.rows.length; i++) {
-  //             console.log(resultSet.rows.item(i));
-  //           }
-  //
-  //    },
-  //   function(tx, error){
-  //     console.log('SELECT error: '+error.message);
-  //   });
-  // }, function(error){
-  //     console.log('transaction error: ' + error.message);
-  // }, function(){
-  //     console.log('transaction ok');
-  //   });
-  // }
+   getData(){
+
+     db.transaction(function(tx){
+     var query = "SELECT choice FROM choices WHERE question = 10 ";
+
+     tx.executeSql(query,[], function(tx,resultSet){
+            for (var i = 0; i < resultSet.rows.length; i++) {
+              console.log(resultSet.rows.item(i));
+            }
+     },
+    function(tx, error){
+      console.log('SELECT error: '+error.message);
+    });
+  }, function(error){
+      console.log('transaction error: ' + error.message);
+  }, function(){
+      console.log('transaction ok');
+    });
+  }
 
 
 
@@ -145,13 +152,13 @@ import SQLite from 'react-native-sqlite-storage';
     return (
 
       <View style={styles.container}>
+        {this.getData()}
            <ScrollView>
           {this.state.data.map((survey,i)=> {
             return(
               <View style={styles.container} key={i}>
               <Text style={styles.question} >{survey.question}</Text>
                   {survey.choices.map((ch,c)=>{
-                    this.addChoiceDB(ch.choice,survey.choice)
                     return(
                       <TouchableHighlight underlayColor='white' key={c}>
                         <View style={styles.button}>
