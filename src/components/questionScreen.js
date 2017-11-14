@@ -20,6 +20,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
    }
 
    componentDidMount(){
+     console.log(this.state.data,'componentDidMount');
      if(this.state.data == ''){
      console.log('Network request');
        return fetch('http://192.168.1.182:8000/Surveys')
@@ -55,7 +56,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
    }
 
 
-  //  addQuestionDB(question){
+  //  addQuestionDB(){
    //
   //       console.log('addquestionDB');
   //       const questionData = this.state.data
@@ -126,12 +127,16 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
    getData(){
 
      db.transaction(function(tx){
-     var query = "SELECT choice FROM choices WHERE question = 10 ";
+     var query = "SELECT questions.id,questions.question,choices.choice FROM questions INNER JOIN choices ON choices.question = questions.id ";
 
      tx.executeSql(query,[], function(tx,resultSet){
+            arrayResult=[]
+
             for (var i = 0; i < resultSet.rows.length; i++) {
-              console.log(resultSet.rows.item(i));
+
+              arrayResult.push(resultSet.rows.item(i))
             }
+            console.log(arrayResult);
      },
     function(tx, error){
       console.log('SELECT error: '+error.message);
@@ -152,7 +157,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
     return (
 
       <View style={styles.container}>
-        {this.getData()}
+          {this.getData()}
            <ScrollView>
           {this.state.data.map((survey,i)=> {
             return(
