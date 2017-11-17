@@ -23,7 +23,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
      console.log(this.state.data,'componentDidMount');
      if(this.state.data == ''){
      console.log('Network request');
-       return fetch('http://192.168.1.182:8000/Surveys')
+       return fetch('http://192.168.1.171:8000/Surveys')
           .then((response)=> {
             return response.json()
           })
@@ -127,20 +127,36 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
    getData(){
 
      db.transaction(function(tx){
-     var query = "SELECT questions.id,questions.question,choices.choice FROM questions INNER JOIN choices ON choices.question = questions.id ";
+    //  var query = "SELECT questions.id,questions.question,choices.choice FROM questions INNER JOIN choices ON choices.question = questions.id ";
+
+      var query ='SELECT id,question FROM questions'
+      const arrayQuestion=[]
+      var secondQuery = 'SELECT choice,question FROM choices'
+      const arrayChoice=[]
 
      tx.executeSql(query,[], function(tx,resultSet){
-            arrayResult=[]
-
             for (var i = 0; i < resultSet.rows.length; i++) {
+                const result = resultSet.rows.item(i)
+                // arrayResult.push(resultSet.rows.item(i))
+                arrayQuestion.push(result);
+                }
+     })
+     tx.executeSql(secondQuery,[],function(tx,resultSet) {
+           for (var i = 0; i < resultSet.rows.length; i++) {
+               const result = resultSet.rows.item(i)
+               arrayChoice.push(result);
+           }
 
-              arrayResult.push(resultSet.rows.item(i))
-            }
-            console.log(arrayResult);
-     },
-    function(tx, error){
+           for (var i = 0; i < arrayQuestion.length; i++) {
+             for (var x = 0; x < arrayChoice.length; x++) {
+               console.log(arrayChoice[x].question);
+             }
+           }
+     })
+     ,
+     function(tx, error){
       console.log('SELECT error: '+error.message);
-    });
+    };
   }, function(error){
       console.log('transaction error: ' + error.message);
   }, function(){
