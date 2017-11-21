@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 
 import {Text,TextInput,View,  StyleSheet,Button, Image,  TouchableHighlight,ScrollView} from 'react-native';
-import {StackNavigator} from 'react-navigation';
 
-import RadioQuestion from './radioQuestion.js';
+import {StackNavigator} from 'react-navigation';
 
 import SQLite from 'react-native-sqlite-storage';
 
@@ -17,30 +16,35 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
        color:false,
        data:[],
           }
+
+          this.getData= this.getData.bind(this);
    }
 
    componentDidMount(){
      console.log(this.state.data,'componentDidMount');
      if(this.state.data == ''){
-     console.log('Network request');
-       return fetch('http://192.168.1.171:8000/Surveys')
-          .then((response)=> {
-            return response.json()
-          })
-          .then((responseJson)=>{
-            newData=[]
-            responseJson.map((item,i)=>{
-              newData.push(item)
-            })
+       this.getData()
+     } else {
+         console.log('Network request');
 
-            this.setState({
-              data:newData
-            })
-          })
-          .catch((error)=>{
-            console.warn(error);
-          })
-        }
+          return fetch('http://192.168.1.171:8000/Surveys')
+              .then((response)=> {
+                return response.json()
+              })
+              .then((responseJson)=>{
+                newData=[]
+                responseJson.map((item,i)=>{
+                  newData.push(item)
+                })
+
+                this.setState({
+                  data:newData
+                })
+              })
+              .catch((error)=>{
+                console.warn(error);
+              })
+      }
    }
 
    errorCB(err){
@@ -125,35 +129,48 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
   // }
 
    getData(){
+     console.log('getData function ');
 
-     db.transaction(function(tx){
+     var query ='SELECT id,question FROM questions'
+     const arrayQuestion=[]
+     var secondQuery = 'SELECT choice,question FROM choices'
+      var arrayResult=[]
+     db.transaction(tx => {
     //  var query = "SELECT questions.id,questions.question,choices.choice FROM questions INNER JOIN choices ON choices.question = questions.id ";
 
-      var query ='SELECT id,question FROM questions'
-      const arrayQuestion=[]
-      var secondQuery = 'SELECT choice,question FROM choices'
-      const arrayChoice=[]
-
-     tx.executeSql(query,[], function(tx,resultSet){
+     tx.executeSql(query,[],(tx,resultSet) => {
             for (var i = 0; i < resultSet.rows.length; i++) {
                 const result = resultSet.rows.item(i)
                 // arrayResult.push(resultSet.rows.item(i))
                 arrayQuestion.push(result);
                 }
-     })
-     tx.executeSql(secondQuery,[],function(tx,resultSet) {
-           for (var i = 0; i < resultSet.rows.length; i++) {
-               const result = resultSet.rows.item(i)
-               arrayChoice.push(result);
-           }
+     }),
+     tx.executeSql(secondQuery,[],(tx,resultSet) => {
+       for (var x = 0; x < arrayQuestion.length; x++) {
+          chArray=[]
+         for (var i = 0; i < resultSet.rows.length; i++) {
+             const result = resultSet.rows.item(i)
+             if(arrayQuestion[x].id == result.question){
 
-           for (var i = 0; i < arrayQuestion.length; i++) {
-             for (var x = 0; x < arrayChoice.length; x++) {
-               console.log(arrayChoice[x].question);
+                    choices ={
+                      choice_id: result.question,
+                      choice:result.choice
+                    }
+                     chArray.push(choices)
              }
            }
-     })
-     ,
+             info = {
+               id_question: arrayQuestion[x].id,
+               question: arrayQuestion[x].question,
+               choices:chArray
+             }
+             arrayResult.push(info)
+
+             this.setState({
+               data: arrayResult
+             })
+         }
+       }),
      function(tx, error){
       console.log('SELECT error: '+error.message);
     };
@@ -162,8 +179,8 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
   }, function(){
       console.log('transaction ok');
     });
-  }
 
+  }
 
 
   render(){
@@ -171,9 +188,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
 
     console.log(this.state,'<--------')
     return (
-
       <View style={styles.container}>
-          {this.getData()}
            <ScrollView>
           {this.state.data.map((survey,i)=> {
             return(
