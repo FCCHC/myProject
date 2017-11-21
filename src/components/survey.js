@@ -75,10 +75,6 @@ class Survey extends Component{
     }
   }
 
-  static navigationOptions={
-    title:'SURVEYAPP',
-  };
-
 
   static navigationOptions={
     title:'SURVEY'

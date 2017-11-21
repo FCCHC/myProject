@@ -6,6 +6,8 @@ import {StackNavigator} from 'react-navigation';
 
 import SQLite from 'react-native-sqlite-storage';
 
+import Swiper from 'react-native-swiper';
+
 const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyDB', location:'Library'}, this.openCB,this.errorCB);
 
  class QuestionScreen extends Component {
@@ -15,9 +17,11 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
        value:0,
        color:false,
        data:[],
+       selectedIndex:0,
           }
 
           this.getData= this.getData.bind(this);
+          this.onPressButton = this.onPressButton.bind(this);
    }
 
    componentDidMount(){
@@ -136,67 +140,70 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
      var secondQuery = 'SELECT choice,question FROM choices'
       var arrayResult=[]
      db.transaction(tx => {
-    //  var query = "SELECT questions.id,questions.question,choices.choice FROM questions INNER JOIN choices ON choices.question = questions.id ";
 
-     tx.executeSql(query,[],(tx,resultSet) => {
-            for (var i = 0; i < resultSet.rows.length; i++) {
-                const result = resultSet.rows.item(i)
-                // arrayResult.push(resultSet.rows.item(i))
-                arrayQuestion.push(result);
+       tx.executeSql(query,[],(tx,resultSet) => {
+              for (var i = 0; i < resultSet.rows.length; i++) {
+                  const result = resultSet.rows.item(i)
+                  arrayQuestion.push(result);
                 }
-     }),
-     tx.executeSql(secondQuery,[],(tx,resultSet) => {
-       for (var x = 0; x < arrayQuestion.length; x++) {
-          chArray=[]
-         for (var i = 0; i < resultSet.rows.length; i++) {
-             const result = resultSet.rows.item(i)
-             if(arrayQuestion[x].id == result.question){
-
-                    choices ={
-                      choice_id: result.question,
-                      choice:result.choice
-                    }
-                     chArray.push(choices)
-             }
-           }
-             info = {
-               id_question: arrayQuestion[x].id,
-               question: arrayQuestion[x].question,
-               choices:chArray
-             }
-             arrayResult.push(info)
-
-             this.setState({
-               data: arrayResult
-             })
-         }
        }),
-     function(tx, error){
-      console.log('SELECT error: '+error.message);
-    };
-  }, function(error){
-      console.log('transaction error: ' + error.message);
-  }, function(){
-      console.log('transaction ok');
-    });
+       tx.executeSql(secondQuery,[],(tx,resultSet) => {
+         for (var x = 0; x < arrayQuestion.length; x++) {
+            chArray=[]
+           for (var i = 0; i < resultSet.rows.length; i++) {
+               const result = resultSet.rows.item(i)
+               if(arrayQuestion[x].id == result.question){
 
+                      choices ={
+                        choice_id: result.question,
+                        choice:result.choice
+                      }
+                       chArray.push(choices)
+               }
+             }
+               info = {
+                 id_question: arrayQuestion[x].id,
+                 question: arrayQuestion[x].question,
+                 choices:chArray
+               }
+               arrayResult.push(info)
+
+               this.setState({
+                 data: arrayResult
+               })
+           }
+         }),
+       function(tx, error){
+        console.log('SELECT error: '+error.message);
+      };
+    }, function(error){
+        console.log('transaction error: ' + error.message);
+    }, function(){
+        console.log('transaction ok');
+      });
   }
 
+
+  onPressButton(){
+      this.setState({
+        selectedIndex:2
+      })
+  }
 
   render(){
         const {navigate} = this.props.navigation;
 
     console.log(this.state,'<--------')
     return (
-      <View style={styles.container}>
-           <ScrollView>
+      <Swiper showsButtons={true} index={this.state.selectedIndex} onIndexChanged={(index)=>{this.setState({selectedIndex:index})}}>
           {this.state.data.map((survey,i)=> {
             return(
+
               <View style={styles.container} key={i}>
               <Text style={styles.question} >{survey.question}</Text>
                   {survey.choices.map((ch,c)=>{
                     return(
-                      <TouchableHighlight underlayColor='white' key={c}>
+                      <TouchableHighlight onPress={this.onPressButton} underlayColor='white' key={c}>
                         <View style={styles.button}>
                           <Text style={styles.buttonText} >{ch.choice}</Text>
                         </View>
@@ -207,9 +214,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
             )
           }
           )}
-          </ScrollView>
-      </View>
-
+            </Swiper>
     )
   }
 }
@@ -224,7 +229,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     flex: 1,
-    alignItems:'center'
+    alignItems:'center',
+    justifyContent:'center'
   },
   backgroundImage:{
     flex:1,
@@ -241,6 +247,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
     justifyContent:'center',
+    alignItems:'center',
     marginTop:10,
     marginBottom:0,
     fontWeight:'bold',
