@@ -27,7 +27,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
    componentDidMount(){
      console.log(this.state.data,'componentDidMount');
      if(this.state.data == ''){
-       this.getData()
+         this.getData()
      } else {
          console.log('Network request');
 
@@ -200,13 +200,17 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
 
     console.log(this.state,'<--------')
     return (
-      <Swiper showsButtons={true} index={0} onIndexChanged={(index)=>this.setState({selectedIndex:index})}>
+      <Swiper showsButtons={false}
+              index={0}
+              onIndexChanged={(index)=>this.setState({selectedIndex:index})}>
+
           {this.state.data.map((survey,i)=> {
             return(
 
               <View style={styles.container} key={i}>
+                <View style={styles.text} >
                   <Text style={styles.question} >{survey.question}</Text>
-
+                </View>
                   {survey.choices=='' ? <TextInput multiline={true}
                                                    style={styles.textInput}
                                                    placeholder='Write your comment here'
@@ -215,6 +219,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                                                  />
                                       : survey.choices.map((ch,c)=>{
                                           return(
+
                                                   <TouchableHighlight underlayColor='white'
                                                                       key={c}>
                                                     <View style={styles.button}>
@@ -222,10 +227,12 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                                                     </View>
                                                   </TouchableHighlight>
                                                 )
-                                            })}
+                                            }
+                                          )
+                                        }
               </View>
                 )
-            }
+              }
             )
           }
       </Swiper>
@@ -244,7 +251,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     alignItems:'center',
-    justifyContent:'center'
   },
   backgroundImage:{
     flex:1,
@@ -252,32 +258,38 @@ const styles = StyleSheet.create({
     height:null,
   },
   button:{
-    marginBottom: 30,
     width: 260,
     alignItems: 'center',
     backgroundColor: 'gray',
+    justifyContent:'space-between',
+    marginTop:30,
   },
   question: {
     fontSize: 20,
     color: 'black',
     justifyContent:'center',
     alignItems:'center',
-    marginTop:10,
-    marginBottom:0,
     fontWeight:'bold',
   },
   textInput:{
-    height:150,
     width:250,
-    backgroundColor:'gray'
-    fontSize: 20,
+    backgroundColor: '#d9d9d9',
+    fontSize: 12,
     color: 'black',
-    justifyContent:'center',
-    alignItems:'center',
-    marginTop:10,
+    borderRadius: 10,
+    borderStyle:'solid',
+    // justifyContent:'center',
+    // alignItems:'center',
+    // marginTop:10,
     marginBottom:0,
-  }
-
+  },
+  text:{
+    marginTop:50,
+    marginBottom:50,
+  },
+  touchableContainer:{
+    justifyContent:'space-between',
+  },
 })
 
 
