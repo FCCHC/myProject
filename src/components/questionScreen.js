@@ -185,9 +185,17 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
   }
 
 
-  onPressButton(event){
+  onPressButton(id,ans){
+       const thing = []
+        answers ={
+          choice_id:id,
+          choice:ans
+        }
+        thing.push(answers)
+
       this.setState({
-        answer:this.state.answer.concat(event)
+          answer:thing,
+          value:''
       })
       this._swiper.scrollBy(1)
   }
@@ -224,7 +232,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                                           return(
                                                   <TouchableOpacity underlayColor='white'
                                                                     key={c}
-                                                                    onPress={()=>this.onPressButton(ch.choice)}>
+                                                                    onPress={()=>this.onPressButton(ch.choice_id,ch.choice)}>
                                                     <View style={styles.button}>
                                                       <Text style={styles.buttonText}>{ch.choice}</Text>
                                                     </View>
