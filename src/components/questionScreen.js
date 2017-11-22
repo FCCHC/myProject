@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import {Text,TextInput,View,  StyleSheet,Button, Image,  TouchableHighlight,ScrollView} from 'react-native';
+import {Text,TextInput,View,  StyleSheet,Button, Image,  TouchableOpacity,ScrollView} from 'react-native';
 
 import {StackNavigator} from 'react-navigation';
 
@@ -18,6 +18,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
        color:false,
        data:[],
        selectedIndex:0,
+       answer:[]
           }
 
           this.getData= this.getData.bind(this);
@@ -184,13 +185,15 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
   }
 
 
-  onPressButton(){
-
+  onPressButton(event){
+      this.setState({
+        answer:this.state.answer.concat(event)
+      })
       this._swiper.scrollBy(1)
   }
 
   static navigationOptions={
-    title:'QUESTIONS'
+    title:'QUESTIONS',
   }
 
   render(){
@@ -211,7 +214,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                 <View style={styles.text} >
                   <Text style={styles.question} >{survey.question}</Text>
                 </View>
-                  {survey.choices=='' ? <TextInput multiline={true}
+                  {survey.choices == '' ? <TextInput onSubmitEditing={()=>this.onPressButton(this.state.value)}
                                                    style={styles.textInput}
                                                    placeholder='Write your comment here'
                                                    autoGrow={true}
@@ -219,13 +222,13 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                                                    />
                                       : survey.choices.map((ch,c)=>{
                                           return(
-                                                  <TouchableHighlight underlayColor='white'
-                                                                      key={c}
-                                                                      onPress={this.onPressButton}>
+                                                  <TouchableOpacity underlayColor='white'
+                                                                    key={c}
+                                                                    onPress={()=>this.onPressButton(ch.choice)}>
                                                     <View style={styles.button}>
-                                                      <Text style={styles.buttonText} >{ch.choice}</Text>
+                                                      <Text style={styles.buttonText}>{ch.choice}</Text>
                                                     </View>
-                                                  </TouchableHighlight>
+                                                  </TouchableOpacity>
                                                 )
                                             }
                                           )
