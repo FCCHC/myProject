@@ -185,10 +185,8 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
 
 
   onPressButton(){
-      this.setState({
-        selectedIndex:2
-      })
-      console.log('selected');
+
+      this._swiper.scrollBy(1)
   }
 
   static navigationOptions={
@@ -201,12 +199,14 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
     console.log(this.state,'<--------')
     return (
       <Swiper showsButtons={false}
-              index={0}
-              onIndexChanged={(index)=>this.setState({selectedIndex:index})}>
+              index={this.state.selectedIndex}
+              // onIndexChanged={(index)=>this.setState({selectedIndex:index})}
+              loop={false}
+              showsPagination={true}
+              ref={(swiper)=>{this._swiper = swiper;}}>
 
           {this.state.data.map((survey,i)=> {
             return(
-
               <View style={styles.container} key={i}>
                 <View style={styles.text} >
                   <Text style={styles.question} >{survey.question}</Text>
@@ -216,12 +216,12 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                                                    placeholder='Write your comment here'
                                                    autoGrow={true}
                                                    onChangeText={(val)=>this.setState({value:val})}
-                                                 />
+                                                   />
                                       : survey.choices.map((ch,c)=>{
                                           return(
-
                                                   <TouchableHighlight underlayColor='white'
-                                                                      key={c}>
+                                                                      key={c}
+                                                                      onPress={this.onPressButton}>
                                                     <View style={styles.button}>
                                                       <Text style={styles.buttonText} >{ch.choice}</Text>
                                                     </View>
