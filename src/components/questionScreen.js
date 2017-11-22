@@ -14,7 +14,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
    constructor(props){
      super(props);
      this.state ={
-       value:0,
+       value:'',
        color:false,
        data:[],
        selectedIndex:0,
@@ -188,6 +188,11 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
       this.setState({
         selectedIndex:2
       })
+      console.log('selected');
+  }
+
+  static navigationOptions={
+    title:'QUESTIONS'
   }
 
   render(){
@@ -195,26 +200,35 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
 
     console.log(this.state,'<--------')
     return (
-      <Swiper showsButtons={true} index={this.state.selectedIndex} onIndexChanged={(index)=>{this.setState({selectedIndex:index})}}>
+      <Swiper showsButtons={true} index={0} onIndexChanged={(index)=>this.setState({selectedIndex:index})}>
           {this.state.data.map((survey,i)=> {
             return(
 
               <View style={styles.container} key={i}>
-              <Text style={styles.question} >{survey.question}</Text>
-                  {survey.choices.map((ch,c)=>{
-                    return(
-                      <TouchableHighlight onPress={this.onPressButton} underlayColor='white' key={c}>
-                        <View style={styles.button}>
-                          <Text style={styles.buttonText} >{ch.choice}</Text>
-                        </View>
-                      </TouchableHighlight>
-                    )
-                  })}
+                  <Text style={styles.question} >{survey.question}</Text>
+
+                  {survey.choices=='' ? <TextInput multiline={true}
+                                                   style={styles.textInput}
+                                                   placeholder='Write your comment here'
+                                                   autoGrow={true}
+                                                   onChangeText={(val)=>this.setState({value:val})}
+                                                 />
+                                      : survey.choices.map((ch,c)=>{
+                                          return(
+                                                  <TouchableHighlight underlayColor='white'
+                                                                      key={c}>
+                                                    <View style={styles.button}>
+                                                      <Text style={styles.buttonText} >{ch.choice}</Text>
+                                                    </View>
+                                                  </TouchableHighlight>
+                                                )
+                                            })}
               </View>
+                )
+            }
             )
           }
-          )}
-            </Swiper>
+      </Swiper>
     )
   }
 }
@@ -252,6 +266,17 @@ const styles = StyleSheet.create({
     marginBottom:0,
     fontWeight:'bold',
   },
+  textInput:{
+    height:150,
+    width:250,
+    backgroundColor:'gray'
+    fontSize: 20,
+    color: 'black',
+    justifyContent:'center',
+    alignItems:'center',
+    marginTop:10,
+    marginBottom:0,
+  }
 
 })
 
