@@ -186,19 +186,38 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
 
 
   onPressButton(id,ans){
-       const thing = []
-        answers ={
-          choice_id:id,
-          choice:ans
-        }
-        thing.push(answers)
+        const id_answer= JSON.stringify({client_response:id})
+        console.log(id_answer);
 
-      this.setState({
-          answer:thing,
-          value:''
-      })
-      this._swiper.scrollBy(1)
+      //  const thing = []
+        // answers ={
+        //   choice_id:id,
+        //   choice:ans
+        // }
+        // thing.push(id_answer,ans)
+
+      // this.setState({
+      //     answer:this.state.answer.concat(thing),
+      //     value:''
+      // })
+
+
+
+      fetch('http://192.168.1.171:8000/Answers',{
+        method: 'POST',
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        body: id_answer,
+      }).then((res)=>res.json())
+      .then((resp)=>console.log(resp))
+      .catch((err)=>{console.log(err)})
+
+
+    this._swiper.scrollBy(1)
+
   }
+
 
   static navigationOptions={
     title:'QUESTIONS',
@@ -211,7 +230,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
     return (
       <Swiper showsButtons={false}
               index={this.state.selectedIndex}
-              // onIndexChanged={(index)=>this.setState({selectedIndex:index})}
+              onIndexChanged={(index)=>this.setState({selectedIndex:index})}
               loop={false}
               showsPagination={true}
               ref={(swiper)=>{this._swiper = swiper;}}>
@@ -222,34 +241,36 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                 <View style={styles.text} >
                   <Text style={styles.question} >{survey.question}</Text>
                 </View>
+
                   {survey.choices == '' ? <TextInput onSubmitEditing={()=>this.onPressButton(this.state.value)}
                                                    style={styles.textInput}
                                                    placeholder='Write your comment here'
                                                    autoGrow={true}
                                                    onChangeText={(val)=>this.setState({value:val})}
                                                    />
-                                      : survey.choices.map((ch,c)=>{
-                                          return(
-                                                  <TouchableOpacity underlayColor='white'
-                                                                    key={c}
-                                                                    onPress={()=>this.onPressButton(ch.choice_id,ch.choice)}>
-                                                    <View style={styles.button}>
-                                                      <Text style={styles.buttonText}>{ch.choice}</Text>
-                                                    </View>
-                                                  </TouchableOpacity>
-                                                )
+                                        : survey.choices.map((ch,c)=>{
+                                            return(
+                                                    <TouchableOpacity underlayColor='white'
+                                                                      key={c}
+                                                                      onPress={()=>this.onPressButton(ch.choice_id,ch.choice)}>
+                                                      <View style={styles.button}>
+                                                        <Text style={styles.buttonText}>{ch.choice}</Text>
+                                                      </View>
+                                                    </TouchableOpacity>
+                                                  )
+                                                }
+                                              )
                                             }
-                                          )
-                                        }
               </View>
+
+                )
+                }
                 )
               }
+            </Swiper>
             )
           }
-      </Swiper>
-    )
-  }
-}
+      }
 
 const styles = StyleSheet.create({
   buttonContainer: {
