@@ -4,9 +4,11 @@ import {Text,TextInput,View,  StyleSheet,Button, Image,  TouchableOpacity,Scroll
 
 import {StackNavigator} from 'react-navigation';
 
-import SQLite from 'react-native-sqlite-storage';
+import SQLite from 'react-native-sqlite-storage';//to save data
 
-import Swiper from 'react-native-swiper';
+import Swiper from 'react-native-swiper';//to swipe every question
+
+import RNFetchBlob from 'react-native-fetch-blob'
 
 const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyDB', location:'Library'}, this.openCB,this.errorCB);
 
@@ -18,18 +20,20 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
        color:false,
        data:[],
        selectedIndex:0,
-       answer:[]
+       answer:[],
+       database:false,
+       getD:false,
           }
 
-          this.getData= this.getData.bind(this);
+          // this.getData= this.getData.bind(this);
           this.onPressButton = this.onPressButton.bind(this);
+          // this.addQuestionDB = this.addQuestionDB.bind(this);
+          // this.addChoiceDB = this.addChoiceDB.bind(this);
    }
 
-   componentDidMount(){
-     console.log(this.state.data,'componentDidMount');
-     if(this.state.data == ''){
-         this.getData()
-     } else {
+   componentWillMount(){
+     console.log(this.state.data,'componentWillMount');
+    //  if(this.state.database == false && this.state.getD == false){
          console.log('Network request');
 
           return fetch('http://192.168.1.171:8000/Surveys')
@@ -43,14 +47,32 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                 })
 
                 this.setState({
-                  data:newData
+                  data:newData,
+                  database:true,
+                  getD:true,
                 })
               })
               .catch((error)=>{
                 console.warn(error);
               })
-      }
-   }
+      // }else{
+      //
+      //     console.log('else if happen');
+        //   this.addQuestionDB()
+        //   .then(()=>{
+        //     this.addChoiceDB()
+          // this.setState({
+          //   getD:false
+          // })
+        // }
+      // }
+      // {if(this.state.getD == false){
+      //   console.log('if getD');
+      //  //  this.getData()
+      // }}
+
+}
+
 
    errorCB(err){
      console.log('SQL Error: ' + err);
@@ -62,6 +84,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
 
    openCB(){
      console.log('Database OPENED');
+
    }
 
 
@@ -88,20 +111,24 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
   //       });
   //       })
    //
+  //       this.setState({
+  //         database:false,
+  //         getD:false,
+  //       })
+   //
   //  }
-
+   //
       // addChoiceDB(){
       //   const datos = this.state.data
       //   datos.map((item,i)=>{
       //     console.log(item.id_question);
       //     const ch = item.choices
       //     ch.map((option,o)=>{
-      //
       //     db.transaction(function (tx){
       //       console.log(option.choice,'option.choice',item.id_question,'item.id_question');
-      //       var query ='INSERT INTO choices(choice,question) VALUES (?,?)'
+      //       var query ='INSERT INTO choices(choice,question,choice_id) VALUES (?,?,?)'
       //
-      //       tx.executeSql(query,[option.choice,item.id_question],function(tx,result){
+      //       tx.executeSql(query,[option.choice,item.id_question,option.choice_id],function(tx,result){
       //           console.log('rowsAffected: '+result.rowsAffected);
       //       },
       //         function(tx,error){
@@ -113,6 +140,11 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
       //       console.log('transaction ok');
       //     });
       //     })
+      //   })
+      //
+      //   this.setState({
+      //     database:false,
+      //     getData:false,
       //   })
       // }
 
@@ -133,61 +165,59 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
   //   });
   // }
 
-   getData(){
-     console.log('getData function ');
+  //  getData(){//get Data saved in the local storage
+  //    console.log('getData function ');
+  //
+  //    var query ='SELECT id,question FROM questions'
+  //    const arrayQuestion=[]
+  //    var secondQuery = 'SELECT choice,question FROM choices'
+  //     var arrayResult=[]
+  //    db.transaction(tx => {
+  //
+  //      tx.executeSql(query,[],(tx,resultSet) => {
+  //             for (var i = 0; i < resultSet.rows.length; i++) {
+  //                 const result = resultSet.rows.item(i)
+  //                 arrayQuestion.push(result);
+  //               }
+  //      }),
+  //      tx.executeSql(secondQuery,[],(tx,resultSet) => {
+  //        for (var x = 0; x < arrayQuestion.length; x++) {
+  //           chArray=[]
+  //          for (var i = 0; i < resultSet.rows.length; i++) {
+  //              const result = resultSet.rows.item(i)
+  //              if(arrayQuestion[x].id == result.question){
+  //
+  //                     choices ={
+  //                       choice_id: result.question,
+  //                       choice:result.choice
+  //                     }
+  //                      chArray.push(choices)
+  //              }
+  //            }
+  //              info = {
+  //                id_question: arrayQuestion[x].id,
+  //                question: arrayQuestion[x].question,
+  //                choices:chArray
+  //              }
+  //              arrayResult.push(info)
+  //
+  //              this.setState({
+  //                data: arrayResult
+  //              })
+  //          }
+  //        }),
+  //      function(tx, error){
+  //       console.log('SELECT error: '+error.message);
+  //     };
+  //   }, function(error){
+  //       console.log('transaction error: ' + error.message);
+  //   }, function(){
+  //       console.log('transaction ok');
+  //     });
+  // }
 
-     var query ='SELECT id,question FROM questions'
-     const arrayQuestion=[]
-     var secondQuery = 'SELECT choice,question FROM choices'
-      var arrayResult=[]
-     db.transaction(tx => {
 
-       tx.executeSql(query,[],(tx,resultSet) => {
-              for (var i = 0; i < resultSet.rows.length; i++) {
-                  const result = resultSet.rows.item(i)
-                  arrayQuestion.push(result);
-                }
-       }),
-       tx.executeSql(secondQuery,[],(tx,resultSet) => {
-         for (var x = 0; x < arrayQuestion.length; x++) {
-            chArray=[]
-           for (var i = 0; i < resultSet.rows.length; i++) {
-               const result = resultSet.rows.item(i)
-               if(arrayQuestion[x].id == result.question){
-
-                      choices ={
-                        choice_id: result.question,
-                        choice:result.choice
-                      }
-                       chArray.push(choices)
-               }
-             }
-               info = {
-                 id_question: arrayQuestion[x].id,
-                 question: arrayQuestion[x].question,
-                 choices:chArray
-               }
-               arrayResult.push(info)
-
-               this.setState({
-                 data: arrayResult
-               })
-           }
-         }),
-       function(tx, error){
-        console.log('SELECT error: '+error.message);
-      };
-    }, function(error){
-        console.log('transaction error: ' + error.message);
-    }, function(){
-        console.log('transaction ok');
-      });
-  }
-
-
-  onPressButton(id,ans){
-        const id_answer= JSON.stringify({client_response:id})
-        console.log(id_answer);
+  onPressButton(id,ans){//function to send answers to server
 
       //  const thing = []
         // answers ={
@@ -203,16 +233,15 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
 
 
 
-      fetch('http://192.168.1.171:8000/Answers',{
-        method: 'POST',
-        headers:{
-          'Content-Type': 'application/json',
-        },
-        body: id_answer,
-      }).then((res)=>res.json())
-      .then((resp)=>console.log(resp))
-      .catch((err)=>{console.log(err)})
 
+
+      RNFetchBlob.fetch('POST','http://192.168.1.171:8000/Answers', {
+          'Content-Type': 'multipart/form-data',
+      }, [
+        { name: 'answer_choice', data: String(id)},
+        { name: 'client_response', data: String(ans)},
+      ]).then((resp)=>{console.log(resp)
+      }).catch((err) => console.log(err))
 
     this._swiper.scrollBy(1)
 
@@ -227,6 +256,14 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
         const {navigate} = this.props.navigation;
 
     console.log(this.state,'<--------')
+    if(this.state.database == true && this.state.getD == true){
+      console.log('true');
+      // this.addQuestionDB()
+      // this.addChoiceDB()
+    }else if(this.state.data == ''){
+      console.log('false');
+      // this.getData()
+    }
     return (
       <Swiper showsButtons={false}
               index={this.state.selectedIndex}
@@ -252,7 +289,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                                             return(
                                                     <TouchableOpacity underlayColor='white'
                                                                       key={c}
-                                                                      onPress={()=>this.onPressButton(ch.choice_id,ch.choice)}>
+                                                                      onPress={()=>this.onPressButton(survey.id_question,ch.choice_id)}>
                                                       <View style={styles.button}>
                                                         <Text style={styles.buttonText}>{ch.choice}</Text>
                                                       </View>
@@ -262,7 +299,6 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                                               )
                                             }
               </View>
-
                 )
                 }
                 )
