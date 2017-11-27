@@ -1,19 +1,10 @@
 import React, { Component } from 'react';
 import {
-  Platform,
   StyleSheet,
   Text,
   View,
   TextInput,
   Button,
-  Alert,
-  ViewPagerAndroid,
-  DatePickerAndroid,
-  Image,
-  AsyncStorage,
-  ToolbarAndroid,
-  ScrollView,
-  TouchableHighlight,
 } from 'react-native';
 
 import Question from './question.js';
@@ -27,9 +18,6 @@ import {StackNavigator} from 'react-navigation';
 import QuestionScreen from './questionScreen.js';
 
 import GenderPicker from './genderPicker.js';
-
-//import {getSurvey} from 'src/Network/apiSurvey.js';
-
 
 class Survey extends Component{
 
@@ -64,26 +52,21 @@ class Survey extends Component{
 
     if(name && lastname && fecha && cel && mail){
 
-      navigate('QuestionScreen');
-    }
-
-    else {
+        navigate('QuestionScreen');
+    }else {
       this.setState({
-
         color : true
       })
     }
   }
 
-
   static navigationOptions={
     title:'SURVEY'
   }
 
-
   render() {
 
-    const nombre = this.state.nombre
+     const nombre = this.state.nombre
      const color = this.state.color
      const fecha = this.state.date
      const mail = this.state.correo
@@ -93,20 +76,20 @@ class Survey extends Component{
     return (
       <View style={styles.container}>
         {console.log('running')}
-        <View style={styles.containerQuestion}>
+        <View style={styles.containerInfo}>
             <Question pregunta= "Nombre"
-                      styleText={styles.question}
+                      styleText={styles.textInfo}
                       placeholder='Nombre'
                       value={this.state.nombre}
                       keyboard='default'
                       maxLength = {40}
                       onChange = {(text)=> this.setState({nombre:text,color:false,})}
                       condition = {color && name === '' ? 'red': 'transparent'}/>
-              </View>
-        <View style={styles.containerQuestion}>
+        </View>
 
+        <View style={styles.containerInfo}>
            <Question pregunta = "Apellido "
-                     styleText={styles.question}
+                     styleText={styles.textInfo}
                      value={this.state.apellido}
                      keyboard='default'
                      placeholder='Apellido'
@@ -115,20 +98,20 @@ class Survey extends Component{
                      condition = {color && lastname === '' ? 'red' : 'transparent'} />
         </View>
 
-        <View style={styles.containerQuestion}>
+        <View style={styles.containerInfo}>
            <Question pregunta = "Celular "
                      maxLength={10}
                      value={this.state.telefono}
-                     styleText={styles.question}
+                     styleText={styles.textInfo}
                      keyboard='numeric'
                      placeholder='000000000'
                      onChange = {(text) => this.setState({telefono :text, color:false})}
                      condition = {color && cel === '' ? 'red' : 'transparent'} />
         </View>
 
-        <View style={styles.containerQuestion}>
+        <View style={styles.containerInfo}>
            <Question pregunta = "Correo "
-                     styleText={styles.question}
+                     styleText={styles.textInfo}
                      value={this.state.correo}
                      maxLength={250}
                      keyboard='email-address'
@@ -139,7 +122,7 @@ class Survey extends Component{
 
 
         <View style={{flexDirection:'row',marginTop:40}}>
-           <Text style={styles.question}>Fecha Nacimiento</Text>
+           <Text style={styles.textInfo}>Fecha Nacimiento</Text>
            <DatePicker style={{width:160,marginLeft:40}}
                        date={this.state.date}
                        mode='date'
@@ -149,7 +132,8 @@ class Survey extends Component{
                        cancelBtnText="Cancel"
                        androidMode='spinner'
                        onDateChange={(date)=> {this.setState({date:date})}}
-                       customStyles= {color && fecha === '' ? {dateInput: {borderColor:'red', marginLeft:0}, dateIcon:{position:'absolute',left:0,top:4,marginLeft:0}} : {dateIcon: {
+                       customStyles= {color && fecha === '' ? {dateInput: {borderColor:'red', marginLeft:0},
+                                     dateIcon:{position:'absolute',left:0,top:4,marginLeft:0}} : {dateIcon: {
                                      position: 'absolute',
                                      left: 0,
                                      top: 4,
@@ -190,14 +174,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     alignItems:'center',
-    //marginTop:50,
   },
   backgroundImage:{
     flex:1,
     width:null,
     height:null,
   },
-  question: {
+  textInfo: {
     fontSize: 20,
     color: 'black',
     justifyContent:'center',
@@ -247,7 +230,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 14,
   },
-  containerQuestion:{
+  containerInfo:{
     flexDirection:'column',
     justifyContent:'center',
     width:400,

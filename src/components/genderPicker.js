@@ -8,7 +8,6 @@ class GenderPicker extends Component{
        <Text style={styles.text}>Género</Text>
          <Picker selectedValue ={this.props.genero}
                   onValueChange={this.props.onChange}
-                //  onValueChange={(itemValue, itemIndex) => this.setState({genero:itemValue})}
                  mode='dropdown'
                  style={{width:170,marginLeft:110}}
                >

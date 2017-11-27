@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import {Text,TextInput,View,  StyleSheet,Button, Image,  TouchableOpacity,ScrollView,NetInfo} from 'react-native';
+import {Text, TextInput, View,  StyleSheet, Button, Image,  TouchableOpacity} from 'react-native';
 
 import {StackNavigator} from 'react-navigation';
 
@@ -60,6 +60,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                 this.setState({
                   database:true
                 })
+                console.log(this.state.database,'database');
               })
               .catch((error)=>{
                 console.warn(error);
@@ -83,7 +84,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
    }
 
 
-   addQuestionDB(){
+   addQuestionDB(){//add questions to storage
 
         console.log('addquestionDB');
         const questionData = this.state.data
@@ -91,33 +92,31 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
         questionData.map((quest,q)=>{
 
           db.transaction((tx)=>{
-           var query = "INSERT INTO questions (question,question_id) VALUES (?,?)";
+             var query = "INSERT INTO questions (question,question_id) VALUES (?,?)";
 
-          tx.executeSql(query, [quest.question,quest.id_question],function(tx,result){
-             console.log('rowsAffected' + result.rowsAffected);
-          },
-          function(tx,error){
-           console.log('INSERT error: ' + error.message);
-          });
-        }, function(error){
+            tx.executeSql(query, [quest.question,quest.id_question],function(tx,result){
+               console.log('rowsAffected' + result.rowsAffected);
+            },
+            function(tx,error){
+             console.log('INSERT error: ' + error.message);
+            });
+          }, function(error){
            console.log('transaction error: '+ error.message);
-         },function(){
+          },function(){
             console.log('transaction ok');
-        });
+          });
         })
 
 
    }
 
-      addChoiceDB(){
+      addChoiceDB(){//add choices to storage
         console.log('addChoiceDB');
         const datos = this.state.data
         datos.map((item,i)=>{
-          console.log(item.id_question,'item.id_question');
           const ch = item.choices
           ch.map((option,o)=>{
-          db.transaction(function (tx){
-            console.log(option.choice,'option.choice',item.id_question,'item.id_question',option.choice_id,'option.choice_id');
+            db.transaction(function (tx){
             var query ='INSERT INTO choices(choice,question,choice_id) VALUES (?,?,?)'
 
             tx.executeSql(query,[option.choice,item.id_question,option.choice_id],function(tx,result){
@@ -126,35 +125,17 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
               function(tx,error){
                 console.log('INSERT error: ' + error.message);
             });
-          }, function(error){
-            console.log('transaction error: '+ error.messaage);
-          },function(){
-            console.log('transaction ok');
+            }, function(error){
+              console.log('transaction error: '+ error.messaage);
+            },function(){
+              console.log('transaction ok');
           });
           })
         })
-
       }
 
-  // deleteDB(){
-  //   db.transaction(function (tx){
-  //     var query = "DELETE FROM choices";
-  //
-  //     tx.executeSql(query,[], function(tx,res){
-  //         console.log('removeId: '+ res.insertId);
-  //     },
-  //     function(tx, error){
-  //       console.log('DELETE error: ' + error.message);
-  //     });
-  //   },function(error){
-  //       console.log('transaction error: '+ error.message);
-  //   }, function(){
-  //     console.log('transaction ok');
-  //   });
-  // }
-
    getData(){//get Data saved in the local storage
-     console.log('getData function ');
+     console.log('Loading data from local storage ');
 
      var query ='SELECT question_id,question FROM questions'
      const arrayQuestion=[]
@@ -205,17 +186,17 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
   }
 
 
-  onPressButton(id,ans){//function to send answers to server
+  onPressButton(id,ans){//function to send answers to server and swipe to next question
 
-      RNFetchBlob.fetch('POST','http://192.168.1.171:8000/Answers', {
+      this._swiper.scrollBy(1);
+
+      RNFetchBlob.fetch('POST','http://192.168.1.195:8000/Answers', {
           'Content-Type': 'multipart/form-data',
       }, [
         { name: 'answer_choice', data: String(id)},
         { name: 'client_response', data: String(ans)},
       ]).then((resp)=>{console.log(resp)
       }).catch((err) => console.log(err))
-
-    this._swiper.scrollBy(1)
 
   }
 
@@ -225,7 +206,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
   }
 
   render(){
-        const {navigate} = this.props.navigation;
+    const {navigate} = this.props.navigation;
 
     console.log(this.state,'<--------')
 
@@ -233,7 +214,12 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
 
       <Swiper showsButtons={false}
               index={this.state.selectedIndex}
-              onIndexChanged={(index)=>this.setState({selectedIndex:index})}
+              onIndexChanged={(index)=>{
+                this.setState({
+                  selectedIndex:index
+                })
+                console.log(this.state.selectedIndex)
+              }}
               loop={false}
               showsPagination={true}
               ref={(swiper)=>{this._swiper = swiper;}}>
@@ -266,10 +252,10 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                                             }
               </View>
                 )
-                }
-                )
-              }
-            </Swiper>
+               }
+              )
+             }
+          </Swiper>
             )
           }
       }
@@ -312,9 +298,6 @@ const styles = StyleSheet.create({
     color: 'black',
     borderRadius: 10,
     borderStyle:'solid',
-    // justifyContent:'center',
-    // alignItems:'center',
-    // marginTop:10,
     marginBottom:0,
   },
   text:{
