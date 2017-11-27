@@ -9,8 +9,6 @@ import {
 
 import Question from './question.js';
 
-import RadioQuestion from './radioQuestion.js';
-
 import DatePicker from 'react-native-datepicker';
 
 import {StackNavigator} from 'react-navigation';

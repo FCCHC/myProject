@@ -213,7 +213,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
     return (
 
       <Swiper showsButtons={false}
-              index={this.state.selectedIndex}
+              index={0}
               onIndexChanged={(index)=>{
                 this.setState({
                   selectedIndex:index
