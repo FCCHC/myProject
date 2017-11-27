@@ -32,7 +32,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
    }
 
    componentDidMount(){
-     console.log(this.state.data,'componentDidMount');
+     console.log('componentDidMount');
      if(this.state.database == true){
             this.getData()
      }else{
@@ -93,7 +93,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
           db.transaction((tx)=>{
            var query = "INSERT INTO questions (question,question_id) VALUES (?,?)";
 
-          tx.executeSql(query, [quest.id_question,quest.question],function(tx,result){
+          tx.executeSql(query, [quest.question,quest.id_question],function(tx,result){
              console.log('rowsAffected' + result.rowsAffected);
           },
           function(tx,error){
@@ -110,9 +110,10 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
    }
 
       addChoiceDB(){
+        console.log('addChoiceDB');
         const datos = this.state.data
         datos.map((item,i)=>{
-          console.log(item.id_question);
+          console.log(item.id_question,'item.id_question');
           const ch = item.choices
           ch.map((option,o)=>{
           db.transaction(function (tx){
@@ -155,7 +156,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
    getData(){//get Data saved in the local storage
      console.log('getData function ');
 
-     var query ='SELECT id,question FROM questions'
+     var query ='SELECT question_id,question FROM questions'
      const arrayQuestion=[]
      var secondQuery = 'SELECT choice,question,choice_id FROM choices'
       var arrayResult=[]
@@ -182,7 +183,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                }
              }
                info = {
-                 id_question: arrayQuestion[x].id,
+                 id_question: arrayQuestion[x].question_id,
                  question: arrayQuestion[x].question,
                  choices:chArray
                }
