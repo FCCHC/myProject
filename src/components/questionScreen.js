@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import {Text, TextInput, View,  StyleSheet, Button, Image,  TouchableOpacity} from 'react-native';
+import {Text, TextInput, View,  StyleSheet, Button, Image,  TouchableOpacity, Alert} from 'react-native';
 
-import {StackNavigator} from 'react-navigation';
+import {StackNavigator, NavigationActions} from 'react-navigation';
 
 import SQLite from 'react-native-sqlite-storage';//to save data
 
@@ -22,6 +22,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
        selectedIndex:0,
        answer:[],
        database:false,
+       count:0,
           }
 
           this.getData= this.getData.bind(this);
@@ -88,7 +89,6 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
 
         console.log('addquestionDB');
         const questionData = this.state.data
-
         questionData.map((quest,q)=>{
 
           db.transaction((tx)=>{
@@ -188,16 +188,32 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
 
   onPressButton(id,ans,text){//function to send answers to server and swipe to next question
 
-      this._swiper.scrollBy(1);
-      RNFetchBlob.fetch('POST','http://192.168.1.195:8000/Answers', {
-          'Content-Type': 'multipart/form-data',
-      }, [
-        { name: 'answer_choice', data: String(id)},
-        { name: 'client_response', data: String(ans)},
-        { name: 'answer_comment', data : String(text)},
-      ]).then((resp)=>{console.log(resp)
-      }).catch((err) => console.log(err))
+      cont= this.state.count
+      questionsLength = this.state.data.length
 
+      const backAction = NavigationActions.back({
+        key:null
+      })
+
+      cont == questionsLength ? Alert.alert('ENCUESTA TERMINADA','Gracias! ',[{text: 'OK', onPress: () => this.props.navigation.dispatch(backAction)}]) : ''
+
+
+
+      // RNFetchBlob.fetch('POST','http://192.168.1.195:8000/Answers', {
+      //     'Content-Type': 'multipart/form-data',
+      // }, [
+      //   { name: 'answer_choice', data: String(id)},
+      //   { name: 'client_response', data: String(ans)},
+      //   { name: 'answer_comment', data : String(text)},
+      // ]).then((resp)=>{console.log(resp)
+      // }).catch((err) => console.log(err))
+
+      this.setState({
+        count: cont + 1
+      })
+
+      this._swiper.scrollBy(1);
+      console.log(cont,this.state.data.length);
   }
 
 
@@ -211,13 +227,20 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
     console.log(this.state,'<--------')
 
     return (
-
-      <Swiper showsButtons={false}
+      // Swiper works when screen is rotated
+      <Swiper ref={(swiper)=>{this._swiper = swiper;}}
               index={0}
-              onIndexChanged={(index)=>{this.setState({selectedIndex:index})}}
+              onIndexChanged={(index)=>{
+                console.log(index,'index');
+                this.setState({
+                  selectedIndex:index
+                })
+                console.log('select');
+                }}
+              scrollEnabled ={true}
               loop={false}
               showsPagination={true}
-              ref={(swiper)=>{this._swiper = swiper;}}>
+            >
 
           {this.state.data.map((survey,i)=> {
             return(
@@ -232,6 +255,9 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                                                              placeholder='Escribe tu comentario aquí'
                                                              autoGrow={true}
                                                              onChangeText={(val)=>this.setState({value:val})}
+                                                             autoFocus={true}
+                                                             underlineColorAndroid='transparent'
+                                                             key={c}
                                                              />
                                                 : <TouchableOpacity underlayColor='white'
                                                                     key={c}
@@ -249,6 +275,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                }
               )
              }
+
           </Swiper>
             )
           }
@@ -274,9 +301,10 @@ const styles = StyleSheet.create({
   button:{
     width: 260,
     alignItems: 'center',
-    backgroundColor: 'gray',
+    backgroundColor: '#d9d9d9',
     justifyContent:'space-between',
     marginTop:30,
+    borderColor: '#d9d9d9',
   },
   question: {
     fontSize: 20,
