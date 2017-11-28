@@ -186,15 +186,15 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
   }
 
 
-  onPressButton(id,ans){//function to send answers to server and swipe to next question
+  onPressButton(id,ans,text){//function to send answers to server and swipe to next question
 
       this._swiper.scrollBy(1);
-
       RNFetchBlob.fetch('POST','http://192.168.1.195:8000/Answers', {
           'Content-Type': 'multipart/form-data',
       }, [
         { name: 'answer_choice', data: String(id)},
         { name: 'client_response', data: String(ans)},
+        { name: 'answer_comment', data : String(text)},
       ]).then((resp)=>{console.log(resp)
       }).catch((err) => console.log(err))
 
@@ -214,12 +214,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
 
       <Swiper showsButtons={false}
               index={0}
-              onIndexChanged={(index)=>{
-                this.setState({
-                  selectedIndex:index
-                })
-                console.log(this.state.selectedIndex)
-              }}
+              onIndexChanged={(index)=>{this.setState({selectedIndex:index})}}
               loop={false}
               showsPagination={true}
               ref={(swiper)=>{this._swiper = swiper;}}>
@@ -231,17 +226,16 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                   <Text style={styles.question} >{survey.question}</Text>
                 </View>
 
-                  {survey.choices == '' ? <TextInput onSubmitEditing={()=>this.onPressButton(this.state.value)}
-                                                   style={styles.textInput}
-                                                   placeholder='Write your comment here'
-                                                   autoGrow={true}
-                                                   onChangeText={(val)=>this.setState({value:val})}
-                                                   />
-                                        : survey.choices.map((ch,c)=>{
-                                            return(
-                                                    <TouchableOpacity underlayColor='white'
-                                                                      key={c}
-                                                                      onPress={()=>this.onPressButton(survey.id_question,ch.choice_id)}>
+                 {survey.choices.map((ch,c)=>{
+                        return( ch.choice == '' ? <TextInput onSubmitEditing={()=>this.onPressButton(survey.id_question,ch.choice_id,this.state.value)}
+                                                             style={styles.textInput}
+                                                             placeholder='Escribe tu comentario aquí'
+                                                             autoGrow={true}
+                                                             onChangeText={(val)=>this.setState({value:val})}
+                                                             />
+                                                : <TouchableOpacity underlayColor='white'
+                                                                    key={c}
+                                                                    onPress={()=>this.onPressButton(survey.id_question,ch.choice_id,this.state.value)}>
                                                       <View style={styles.button}>
                                                         <Text style={styles.buttonText}>{ch.choice}</Text>
                                                       </View>
