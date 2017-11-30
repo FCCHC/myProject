@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import {Text, TextInput, View,  StyleSheet, Button, Image,  TouchableOpacity, Alert} from 'react-native';
+import {Text, TextInput, View,  StyleSheet, Button, Image, Dimensions,  TouchableOpacity, Alert} from 'react-native';
 
 import {StackNavigator, NavigationActions} from 'react-navigation';
 
@@ -8,7 +8,10 @@ import SQLite from 'react-native-sqlite-storage';//to save data
 
 import Swiper from 'react-native-swiper';//to swipe every question
 
+import Orientation from 'react-native-orientation';
+
 import RNFetchBlob from 'react-native-fetch-blob'
+
 
 const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyDB', location:'Library'}, this.openCB,this.errorCB);
 
@@ -22,24 +25,39 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
        selectedIndex:0,
        answer:[],
        database:false,
-       count:0,
+       count:1,
+       width:window.width,
+       height: window.height,
           }
 
           this.getData= this.getData.bind(this);
           this.onPressButton = this.onPressButton.bind(this);
           this.addQuestionDB = this.addQuestionDB.bind(this);
           this.addChoiceDB = this.addChoiceDB.bind(this);
+          this._orientationDidChange = this._orientationDidChange.bind(this);
 
    }
 
+   _orientationDidChange(orientation){
+     console.log('orientation');
+     let window = Dimensions.get(window)
+     this.setState({
+       width:window.width,
+       height:window.height
+     })
+   }
+
    componentDidMount(){
+     console.log(Orientation,'orientation');
+     Orientation.addOrientationListener(this._orientationDidChange);
+
      console.log('componentDidMount');
      if(this.state.database == true){
             this.getData()
      }else{
          console.log('Network request');
 
-          return fetch('http://192.168.1.195:8000/Surveys')
+          return fetch('http://192.168.1.172:8000/Surveys')
               .then((response)=> {
                 return response.json()
               })
@@ -83,6 +101,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
      console.log('Database OPENED');
 
    }
+
 
 
    addQuestionDB(){//add questions to storage
@@ -186,20 +205,19 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
   }
 
 
-  onPressButton(id,ans,text){//function to send answers to server and swipe to next question
+  onPressButton(){//function to send answers to server and swipe to next question
 
-      cont= this.state.count
-      questionsLength = this.state.data.length
+      // var cont= this.state.count
+      // questionsLength = this.state.data.length
+      // const backAction = NavigationActions.back({
+      //       key:null
+      //     })
+      //
+      // cont == questionsLength ? Alert.alert('ENCUESTA TERMINADA','Gracias! ',[{text: 'OK', onPress: () => this.props.navigation.dispatch(backAction)}]) : ''
+      //
 
-      const backAction = NavigationActions.back({
-        key:null
-      })
 
-      cont == questionsLength ? Alert.alert('ENCUESTA TERMINADA','Gracias! ',[{text: 'OK', onPress: () => this.props.navigation.dispatch(backAction)}]) : ''
-
-
-
-      // RNFetchBlob.fetch('POST','http://192.168.1.195:8000/Answers', {
+      // RNFetchBlob.fetch('POST','http://192.168.1.172:8000/Answers', {
       //     'Content-Type': 'multipart/form-data',
       // }, [
       //   { name: 'answer_choice', data: String(id)},
@@ -207,14 +225,15 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
       //   { name: 'answer_comment', data : String(text)},
       // ]).then((resp)=>{console.log(resp)
       // }).catch((err) => console.log(err))
-
-      this.setState({
-        count: cont + 1
-      })
-
       this._swiper.scrollBy(1);
-      console.log(cont,this.state.data.length);
-  }
+      // this.setState({
+      //   count: cont + 1,
+      //   value:'',
+      // })
+  //     console.log(this.state.count);
+  //
+  //     console.log(this.state.count,this.state.data.length);
+   }
 
 
   static navigationOptions={
@@ -223,26 +242,29 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
 
   render(){
     const {navigate} = this.props.navigation;
-
     console.log(this.state,'<--------')
 
     return (
+      // <View style={{width: this.state.width, height: this.state.height, position: 'absolute', left: 0, top:0, right: 0, bottom: 0}}>
       // Swiper works when screen is rotated
-      <Swiper ref={(swiper)=>{this._swiper = swiper;}}
-              index={0}
-              onIndexChanged={(index)=>{
-                console.log(index,'index');
-                this.setState({
-                  selectedIndex:index
-                })
-                console.log('select');
-                }}
-              scrollEnabled ={true}
-              loop={false}
-              showsPagination={true}
-            >
+      <Swiper ref={(Swiper)=>this._swiper=Swiper}
+        showsButtons={true}
+      >
+        {this.renderViews()}
+      {/* {this.state.data.map((nQuestion,i)=>{
+        return(
+          <View style={{width: this.state.width, height: this.state.height, position: 'absolute', left: 0, top:0, right: 0, bottom: 0}} key={i}>
+            <View style={styles.text} >
+              <Text style={styles.question} >{nQuestion.question}</Text>
+            </View>
+          </View>
+        )
+      }
+    )} */}
 
-          {this.state.data.map((survey,i)=> {
+
+          {/* {this.state.data.map((survey,i)=> {
+            console.log(this.state.data);
             return(
               <View style={styles.container} key={i}>
                 <View style={styles.text} >
@@ -250,7 +272,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                 </View>
 
                  {survey.choices.map((ch,c)=>{
-                        return( ch.choice == '' ? <TextInput onSubmitEditing={()=>this.onPressButton(survey.id_question,ch.choice_id,this.state.value)}
+                        return( ch.choice == ' ' ? <TextInput onSubmitEditing={()=>this.onPressButton()}
                                                              style={styles.textInput}
                                                              placeholder='Escribe tu comentario aquí'
                                                              autoGrow={true}
@@ -261,7 +283,7 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                                                              />
                                                 : <TouchableOpacity underlayColor='white'
                                                                     key={c}
-                                                                    onPress={()=>this.onPressButton(survey.id_question,ch.choice_id,this.state.value)}>
+                                                                    onPress={()=>this.onPressButton()}>
                                                       <View style={styles.button}>
                                                         <Text style={styles.buttonText}>{ch.choice}</Text>
                                                       </View>
@@ -274,9 +296,10 @@ const db = SQLite.openDatabase({name: 'surveyDB', createFromLocation : '~surveyD
                 )
                }
               )
-             }
+             }*/}
 
           </Swiper>
+        // </View>
             )
           }
       }
@@ -290,7 +313,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flexDirection: 'column',
-    flex: 1,
+    // flex: 1,
     alignItems:'center',
   },
   backgroundImage:{
